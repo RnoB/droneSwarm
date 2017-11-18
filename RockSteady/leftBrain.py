@@ -9,7 +9,6 @@ import droneSpecs
 import droneControl
 import struct
 
-
 state = 0
 running = True
 started = False
@@ -153,20 +152,20 @@ def main():
     ti=t0
     state = 1
     #displayStart()
-    print('the left brain IP is : '+str(swarmNet.leftBrainIP))
-    statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.leftBrainIP,))
-    statusThread.daemon = True
-    statusThread.start()
-    statusThread = threading.Thread(target = brainStatus, args=(swarmNet.rightBrainIP,))
-    statusThread.daemon = True
-    statusThread.start()
-    statusThread = threading.Thread(target = droneControl, args=())
-    statusThread.daemon = True
-    statusThread.start()
+    # print('the left brain IP is : '+str(swarmNet.leftBrainIP))
+    # statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.leftBrainIP,))
+    # statusThread.daemon = True
+    # statusThread.start()
+    # statusThread = threading.Thread(target = brainStatus, args=(swarmNet.rightBrainIP,))
+    # statusThread.daemon = True
+    # statusThread.start()
+    # statusThread = threading.Thread(target = droneControl, args=())
+    # statusThread.daemon = True
+    # statusThread.start()
     try:
 
-        vision.sectionCrop(droneSpecs.leftEye)
-        vision.start()
+        # vision.sectionCrop(droneSpecs.leftEye)
+        # vision.start()
         started = True
         droneController.start()
         droneConnected =True
@@ -174,11 +173,11 @@ def main():
         started=True
         droneConnected =False
 
-    while running:
+    # while running:
 
         
-        time.sleep(60)
-        print('---- waiting for your drones')
+    #     time.sleep(60)
+    #     print('---- waiting for your drones')
         
 
 
