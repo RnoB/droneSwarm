@@ -61,7 +61,7 @@ class visionAnalyzer(PiRGBAnalysis):
                 theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
                 phiMax = np.max(phi)
                 phiMin = np.min(phi)
-                self.duV = self.duV - (math.sin(phiMax)-math.sin(phiMin))
+                self.duV = self.duV + (math.sin(phiMax)-math.sin(phiMin))
                 self.dpV = self.dpV - (math.cos(phiMax)-math.cos(phiMin))
                 self.dudV = self.dudV + (math.sin(phiMax)+math.sin(phiMin))
                 self.dpdV = self.dpdV + (math.cos(phiMax)+math.cos(phiMin))
