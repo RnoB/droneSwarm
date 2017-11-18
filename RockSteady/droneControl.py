@@ -186,7 +186,7 @@ class droneController:
 
     def landing(self):
         if self.droneConnected:
-            self.drone.landing()
+            self.drone.land()
 
 
     def move(self):
