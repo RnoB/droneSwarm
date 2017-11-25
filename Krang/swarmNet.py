@@ -8,8 +8,8 @@ import uuid
 
 krangIP = '192.168.30.1'
 
-dronesIP = ['192.168.0.151', '192.168.30.52', '192.168.30.53',
-            '192.168.30.54', '192.168.30.55']
+dronesIP = ['192.168.30.11', '192.168.30.12', '192.168.30.13',
+            '192.168.30.14', '192.168.30.15']
 
 
 broadcastIP = '192.168.30.255'
@@ -110,12 +110,15 @@ def requestStatus(ip):
         try:
             data = struct.pack('i', requestStatusCode)
             socketClient.sendall(data)
-            code = struct.unpack('i',socketClient.recv(4))[0]
-            if code == sendStatusCode:
-                status = True      
+            code = struct.unpack('ii',socketClient.recv(8))[0]
+            if code[0] == sendStatusCode:
+                status = code[1]      
+        except:
+            status = 0
         finally:
             socketClient.shutdown(socket.SHUT_RDWR)
             socketClient.close()
+
 
     except:
         pass
@@ -128,7 +131,7 @@ def requestStatus(ip):
 
 
 def droneComm(ip,dronePort = droneCommLeftPort,code = requestStatusCode,dataSend = []):
-    status = False
+    status = 0
     socketClient = socket.socket()
     socketClient.settimeout(10)
     socketClient.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -160,6 +163,7 @@ def droneComm(ip,dronePort = droneCommLeftPort,code = requestStatusCode,dataSend
                 socketClient.sendall(data)
                 dataRec = struct.unpack('i',socketClient.recv(4))
                 status =dataRec[0]
+        
         finally:
             socketClient.shutdown(socket.SHUT_RDWR)
             socketClient.close()
