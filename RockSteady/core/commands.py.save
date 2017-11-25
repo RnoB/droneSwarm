@@ -80,7 +80,12 @@ def setDateCmd( date ):
     # ARCOMMANDS_ID_COMMON_CLASS_COMMON = 4,
     # ARCOMMANDS_ID_COMMON_COMMON_CMD_CURRENTDATE = 1,
     # Date with ISO-8601 format
-    return struct.pack("BBH", 0, 4, 1) + date.isoformat() + '\0'
+#    dd = bytearray()
+#    dd.append(struct.pack("BBH", 0, 4, 1))
+#    dd.append(date.isoformat().encode())
+#    dd.append(b'\0')
+#    return dd
+    return struct.pack("BBH", 0, 4, 1) + date.isoformat().encode() + b'\0'
 
 def setTimeCmd( time ):    
     # ARCOMMANDS_ID_PROJECT_COMMON = 0,
@@ -88,7 +93,7 @@ def setTimeCmd( time ):
     # ARCOMMANDS_ID_COMMON_COMMON_CMD_CURRENTTIME = 2,
     # Time with ISO-8601 format
     # note, that "time.isoformat()" did not work '19:39:22.887000' milisec??
-    return struct.pack("BBH", 0, 4, 2) + time.strftime("T%H%M%S+0000") + '\0'
+    return struct.pack("BBH", 0, 4, 2) + time.strftime("T%H%M%S+0000").encode() + b'\0'
 
 
 def setSpeedSettingsCmdList( maxVerticalSpeed, maxRotationSpeed, hullProtection, outdoor ):
@@ -138,20 +143,53 @@ def resetHomeCmd():
     return struct.pack("BBH", 1, 23, 1)
 
 # NOT TESTED - Aldo? Altitude?
-def setHomeCmd( lat, lon, altitude=0.0 ):
+def setHomeCmd( lat, lon, altitude=2.0 ):
     # ARCOMMANDS_ID_PROJECT_ARDRONE3 = 1
     # ARCOMMANDS_ID_ARDRONE3_CLASS_GPSSETTINGS = 23
     # ARCOMMANDS_ID_ARDRONE3_GPSSETTINGS_CMD_SETHOME = 0,
     return struct.pack("<BBHddd", 1, 23, 0, lat, lon, altitude)
 
 # NOT TESTED - Aldo?
-def navigateHomeCmd( go=True ):
+def navigateHomeCmd( go=1 ):
     "navigate home - to STOP use go=False"
     # ARCOMMANDS_ID_PROJECT_ARDRONE3 = 1,
     # ARCOMMANDS_ID_ARDRONE3_CLASS_PILOTING = 0,
     # ARCOMMANDS_ID_ARDRONE3_PILOTING_CMD_NAVIGATEHOME = 5,
     return struct.pack("<BBHB", 1, 0, 5, go)
 
+def moveByCmd( dX, dY, dZ, dPsi):
+    # ARCOMMANDS_ID_PROJECT_ARDRONE3 = 1,
+    # ARCOMMANDS_ID_ARDRONE3_CLASS_PILOTING = 0,
+    # ARCOMMANDS_ID_ARDRONE3_PILOTING_CMD_MOVEBY= 7,
+    # Move the drone to a relative position and rotate heading by a given angle
+    # The frame is horizontal and relative to the current drone orientation:
+    #       - X is front
+    #       - Y is right
+    #       - Z is down
+    #print ('Moving')
+    return struct.pack("<BBHffff", 1, 0, 7, dX, dY, dZ, dPsi)
+
+# NOT TESTED
+def moveToCmd( lat, lon, altitude):
+    # ARCOMMANDS_ID_PROJECT_ARDRONE3 = 1,
+    # ARCOMMANDS_ID_ARDRONE3_CLASS_PILOTING = 0,
+    # ARCOMMANDS_ID_ARDRONE3_PILOTING_CMD_MOVETO= 10,
+    # Move the drone to a specified location
+    # Latitude of the location (in degrees) to reach (Double)
+    # Longitude of the location (in degrees) to reach (Double)
+    # Altitude above sea level (in m) to reach (Double)
+    # Orientation mode of the move to (enum) [NONE, TO_TARGET, HEADING_START, HEADING_DURING]
+    # Heading (relative to the North in degrees).This value is only used if the orientation mode is HEADING_START or HEADING_DURING
+    mode = 0
+    heading = 0.0
+    return struct.pack("<BBHfffIf", 1, 0, 10, lat, lon, altitude, mode, heading)
+
+def cancelMoveToCmd():
+    # ARCOMMANDS_ID_PROJECT_ARDRONE3 = 1,
+    # ARCOMMANDS_ID_ARDRONE3_CLASS_PILOTING = 0,
+    # ARCOMMANDS_ID_ARDRONE3_PILOTING_CMD_MOVETO= 11,
+    # Cancel the current moveTo. If there is no current moveTo, this command has no effect.
+    return struct.pack("<BBH", 1, 0, 11)
 
 def packData( payload, ackRequest=False ):
     frameType = 2
@@ -186,7 +224,7 @@ class CommandSender( Thread ):
         assert len(cmd) > 3, repr(cmd)
         frameId = cmd[1]
         self.seqId[ frameId ] += 1
-        return cmd[:2] + chr(self.seqId[frameId] % 256) + cmd[3:]
+        return cmd[:2] + chr(self.seqId[frameId] % 256).encode('utf-8') + cmd[3:]
 
     def isPCMD( self, cmd ):
         if len(cmd) != 7+13: # BBHBbbbbf

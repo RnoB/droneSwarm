@@ -168,8 +168,6 @@ def main():
         # vision.start()
         started = True
         droneController.start()
-        droneController.TakeOff()
-        time.sleep(4)
         droneController.landing()
         droneConnected =True
     except:

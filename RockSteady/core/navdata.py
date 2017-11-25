@@ -19,7 +19,7 @@ POSITION_TIME_DELTA = 0.2 # estimated to 5Hz
 
 
 def printHex( data ):
-   print (" ".join(["%02X" % ord(x) for x in data]))
+    print(" ".join(["%02X" % ord(x) for x in data]))
 
 
 def parseFrameType( data ):
@@ -52,7 +52,7 @@ def parseData( data, robot, verbose=False ):
         assert frameSize == 8, frameSize
         assert frameId == 0x8B, hex(frameId)
         if verbose:
-            print ("ACKACK"+str( ord(data[frameSize-1])))
+            print("ACKACK", ord(data[frameSize-1]))
         data = data[frameSize:]
         return data
 
@@ -60,7 +60,7 @@ def parseData( data, robot, verbose=False ):
         assert frameSize >= 12, frameSize
         assert frameId == 0x7D, hex(frameId)
         frameNumber, frameFlags, fragmentNumber, fragmentsPerFrame = struct.unpack("<HBBB", data[7:12])
-        ##print"Video", frameNumber, frameFlags, fragmentNumber, fragmentsPerFrame
+        #print "Video", frameNumber, frameFlags, fragmentNumber, fragmentsPerFrame
         #printHex( data[:20] )
         data = data[frameSize:]
         return data
@@ -76,40 +76,58 @@ def parseData( data, robot, verbose=False ):
                 # ARCOMMANDS_ID_COMMON_COMMONSTATE_CMD_WIFISIGNALCHANGED = 7,
                 rssi = struct.unpack("h", data[7:7+2])[0] # RSSI of the signal between controller and the product (in dbm)
                 if verbose:
-                    print("Wifi"+str( rssi))
+                    print("Wifi", rssi)
             else:
                 printHex( data[:frameSize] )
         elif commandProject == 1:
             if (commandClass, commandId) == (4,4):
                 lat, lon, alt = struct.unpack("ddd", data[11:11+3*8])
                 robot.positionGPS = (lat, lon, alt)
+                #print "GPS Position ", lat, lon, alt
                 if verbose:
-                    print ("Position"+str(lat)+str(lon)+str(alt))
+                    print("Position", lat, lon, alt)
             elif (commandClass, commandId) == (4,5):
                 speedX, speedY, speedZ = struct.unpack("fff", data[11:11+3*4])
                 robot.speed = (speedX, speedY, speedZ)
                 robot.position = robot.position[0]+POSITION_TIME_DELTA*speedX, robot.position[1]+POSITION_TIME_DELTA*speedY, robot.position[2]+POSITION_TIME_DELTA*speedZ
                 if verbose:
-                    print ("Speed"+str( (speedX, speedY, speedZ)))
+                    print("Speed", speedX, speedY, speedZ)
+# Angle
             elif (commandClass, commandId) == (4,6):
                 roll, pitch, yaw = struct.unpack("fff", data[11:11+3*4])
+                robot.angle=(roll, pitch, yaw)
                 if verbose:
-                    print ("Angle"+str(( roll, pitch, yaw)))
+                    print("Angle", roll, pitch, yaw)
+            
             elif (commandClass, commandId) == (4,8):
                 robot.altitude = struct.unpack("d", data[11:11+8])[0]            
                 if verbose:
-                    print ("Altitude" +str( robot.altitude))
+                    print("Altitude", robot.altitude)
+            
             elif (commandClass, commandId) == (25,0):
                 tilt,pan = struct.unpack("BB", data[11:11+2])
                 if verbose:
-                    print("CameraState Tilt/Pan"+str( (tilt, pan)))
+                    print("CameraState Tilt/Pan", tilt, pan)
+            
+            elif (commandClass, commandId) == (34,0): #Change this with Mario's tests
+                print("MoveByEnd ok, Unknown, Busy, Not available or Interrupted")
+                try:
+                    dX, dY, dZ, dPsi, Event = struct.unpack("ffffI", data[11:11+5*4])
+                    robot.moveByEnd = (dX, dY, dZ, dPsi, Event)
+                    if verbose:
+                        print("MoveByEnd moved: ", dX, dY, dZ, "Angle moved: ", dPsi, "Event: ", Event)
+                        Events = ["OK. Relative displacement done", "UNKNOWN generic error", "BUSY, command ignored", "NOTAVAILABLE, command ignored", "INTERRUPTED"]
+                        print("ALERT Event", Event, Events[Event])
+                except Exception as e:
+                    print("Error trying to unpack moveByEnd struct, error:", e)
+                    pass
             else:
+                print("Command project, commandClass, commandId: ", commandProject, commandClass, commandId)
                 if verbose:
-                    print ("UNKNOWN")
-                    printHex( data[:frameSize] )
+                    print("UNKNOWN", printHex( data[:frameSize] ))
                     assert False
         else:
-            print ("UNKNOWN Project"+str( commandProject))
+            print("UNKNOWN Project", commandProject)
     elif frameId == 0x7E:
         commandProject, commandClass, commandId = struct.unpack("BBH",  data[7:7+4])
         if (commandProject, commandClass) == (0,3):
@@ -117,99 +135,114 @@ def parseData( data, robot, verbose=False ):
             if commandId == 0:
                 # ARCOMMANDS_ID_COMMON_SETTINGSSTATE_CMD_ALLSETTINGSCHANGED = 0
                 if verbose:
-                    print ("AllSettings - done.")
+                    print("AllSettings - done.")
             elif commandId == 2:
                 # ARCOMMANDS_ID_COMMON_SETTINGSSTATE_CMD_PRODUCTNAMECHANGED = 2
                 if verbose:
-                    print ("ProductName"+str(data[11:frameSize-1]))
+                    print("ProductName", data[11:frameSize-1])
             elif commandId == 3:
                 # ARCOMMANDS_ID_COMMON_SETTINGSSTATE_CMD_PRODUCTVERSIONCHANGED = 3
                 if verbose:
-                    print ("ProductVersion"+str( data[11:frameSize-1]))
+                    print("ProductVersion", data[11:frameSize-1])
             elif commandId == 4:
                 # ARCOMMANDS_ID_COMMON_SETTINGSSTATE_CMD_PRODUCTSERIALHIGHCHANGED = 4
                 if verbose:
-                    print ("ProductSerialHigh"+str( data[11:frameSize-1]))
+                    print("ProductSerialHigh", data[11:frameSize-1])
             elif commandId == 5:
                 # ARCOMMANDS_ID_COMMON_SETTINGSSTATE_CMD_PRODUCTSERIALLOWCHANGED = 5
                 if verbose:
-                    print ("ProductSerialLow"+ str(data[11:frameSize-1]))
+                    print("ProductSerialLow", data[11:frameSize-1])
             elif commandId == 6:
                 # ARCOMMANDS_ID_COMMON_SETTINGSSTATE_CMD_COUNTRYCHANGED = 6
                 if verbose:
-                    print ("Country"+str( data[11:frameSize-1]))                    
+                    print("Country", data[11:frameSize-1])                    
             elif commandId == 7:
                 # ARCOMMANDS_ID_COMMON_SETTINGSSTATE_CMD_AUTOCOUNTRYCHANGED = 7
                 if verbose:
-                    print ("AutoCountry"+str( struct.unpack("B", data[11:12])[0]))
+                    print("AutoCountry", struct.unpack("B", data[11:12])[0])
             else:
                 if verbose:
-                    print ("Unknown(0,3)"+str( commandId))
+                    print("Unknown(0,3)", commandId)
                     printHex( data[:frameSize] )
         elif (commandProject, commandClass, commandId) == (0,5,1):
             battery = struct.unpack("B", data[11:12])[0]
             robot.battery = battery
             if verbose:
-                print ("Battery"+str( battery))
+                print("Battery", battery)
         elif (commandProject, commandClass, commandId) == (0,5,4):
             if verbose:
-                print ("Date:"+str( data[11:frameSize-1]))
+                print("Date:", data[11:frameSize-1])
         elif (commandProject, commandClass, commandId) == (0,5,5):
             if verbose:
-                print ("Time:"+str( data[11:frameSize-1]))
+                print("Time:", data[11:frameSize-1])
         elif (commandProject, commandClass, commandId) == (0,10,0):
             # ARCOMMANDS_ID_COMMON_CLASS_WIFISETTINGSSTATE = 10,
             # ARCOMMANDS_ID_COMMON_WIFISETTINGSSTATE_CMD_OUTDOORSETTINGSCHANGED
             if verbose:
-                print("WiFi Outdoor:"+str( struct.unpack("B", data[11:12])[0]))
+                print("WiFi Outdoor:", struct.unpack("B", data[11:12])[0])
         elif (commandProject, commandClass) == (0,14):
             # ARCOMMANDS_ID_COMMON_CLASS_CALIBRATIONSTATE = 14,
             if commandId == 0:
                 # ARCOMMANDS_ID_COMMON_CALIBRATIONSTATE_CMD_MAGNETOCALIBRATIONSTATECHANGED = 0,
                 x,y,z,failed = struct.unpack("BBBB", data[11:11+4])
                 if verbose:
-                    print("Magnetometer calibration" +str(((x,y,z), failed)))
+                    print("Magnetometer calibration", (x,y,z), failed)
             elif commandId == 1:
                 # ARCOMMANDS_ID_COMMON_CALIBRATIONSTATE_CMD_MAGNETOCALIBRATIONREQUIREDSTATE
                 required = struct.unpack("B", data[11:11+1])[0]
                 if verbose:
-                    print ("Magnetometer calibration required"+str( required))
+                    print("Magnetometer calibration required", required)
             elif commandId == 3:
                 # ARCOMMANDS_ID_COMMON_CALIBRATIONSTATE_CMD_MAGNETOCALIBRATIONSTARTEDCHANGED
                 started = struct.unpack("B", data[11:11+1])[0]
                 if verbose:
-                    print ("Magnetometer calibration required"+str( started))
+                    print("Magnetometer calibration required", started)
             else:
                 if verbose:
-                    print ("Calibration"+str( commandId))
+                    print("Calibration", commandId, end=' ')
                     printHex( data[:frameSize] )
+        elif (commandProject, commandClass) == (1,0):
+            print("Unknown Command ID:", end=' ')
+            printHex( data[:frameSize] )
 
         elif (commandProject, commandClass) == (1,4):
             # ARCOMMANDS_ID_ARDRONE3_CLASS_PILOTINGSTATE = 4,
             if commandId == 0:
                 # ARCOMMANDS_ID_ARDRONE3_PILOTINGSTATE_CMD_FLATTRIMCHANGED = 0
-                #print"FlatTrim changed")
+                print("FlatTrim changed")
                 robot.flatTrimCompleted = True
             elif commandId == 1:
                 # ARCOMMANDS_ID_ARDRONE3_PILOTINGSTATE_CMD_FLYINGSTATECHANGED = 1
                 state = struct.unpack("I", data[11:11+4])[0]
-                states = ["landed", "takingoff", "hovering", "flying", "landing", "emergency"]
+                states = ["landed", "takingoff", "hovering", "flying", "landing", "emergency", "userTakeOff", "MotorRamping", "EmergencyLanding"]
                 robot.flyingState = state
-                #print"Flying State"+str(( state, states[state])))
+                print("Flying State", state, states[state])
             elif commandId == 2:
                 # ARCOMMANDS_ID_ARDRONE3_PILOTINGSTATE_CMD_ALERTSTATECHANGED
                 state = struct.unpack("I", data[11:11+4])[0]
                 states = ["none/No alert", "user/User emergency alert", "cut_out/Cut out alert", "critical_battery", "low_battery", "too_much_angle"]
-                #print"ALERT State"+str( (state, states[state])))
+                print("ALERT State", state, states[state])
             elif commandId == 3:
                 # ARCOMMANDS_ID_ARDRONE3_PILOTINGSTATE_CMD_NAVIGATEHOMESTATECHANGED
                 state, reason = struct.unpack("II", data[11:11+2*4])
                 states = ["available", "inProgress", "unavailable", "pending", "low_battery", "too_much_angle"]
                 reasons = ["userRequest", "connectionLost", "lowBattery", "finished", "stopped", "disabled", "enabled"]
-                #print"NavigateHomeStateChanged"+str(( state, states[state], reasons[reason])))
+                print("NavigateHomeStateChanged", state, states[state], reasons[reason])
                 robot.navigateHomeState = state
+###
+            elif commandId == 12:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSTATE_CMD_moveToChanged
+                try:
+                    lat, lon, alt, or_mode, heading, state = struct.unpack("dddIfI", data[11:11+6*4])
+                    states = ["Running", "Done", "Canceled", "Error"]
+                    print("MoveTo command, changed Status:", stat, states[state])
+                    robot.moveToState = state
+                except Exception as e:
+                    print("Error trying to unpack moveTo struct, error:", e)
+                    pass
+
             else:
-                #print"Unknown Piloting State"+str( commandId))
+                print("Unknown or new version of Piloting State. Command ID:", commandId, ",", end=' ')
                 printHex( data[:frameSize] )
 
         elif (commandProject, commandClass) == (1,6):
@@ -217,17 +250,53 @@ def parseData( data, robot, verbose=False ):
             if commandId == 0:
                 # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_MAXALTITUDECHANGED = 0,
                 if verbose:
-                    print("MaxAltitude:"+str( struct.unpack("fff", data[11:11+3*4])))
+                    print("MaxAltitude:", struct.unpack("fff", data[11:11+3*4]))
             elif commandId == 1:
                 # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_MAXTILTCHANGED = 1,
                 if verbose:
-                    print("MaxTilt:"+str( struct.unpack("fff", data[11:11+3*4])))
+                    print("MaxTilt:", struct.unpack("fff", data[11:11+3*4]))
             elif commandId == 2:
-                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_ABSOLUTCONTROLCHANGED,
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_ABSOLUTCONTROLCHANGED = 2,
                 if verbose:
-                    print("AbsoluteControl:"+str( struct.unpack("B", data[11:12])[0]))
+                    print("AbsoluteControl:", struct.unpack("B", data[11:12])[0])
+            elif commandId == 3:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_MaxDistanceChanged = 3,
+                if verbose:
+                    print("MaxDistance:", struct.unpack("fff", data[11:11+3*4]))
+            elif commandId == 4:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_NoFlyOverMaxDistanceChanged = 4,
+                if verbose:
+                    print("NoFlyOverMaxDistance:", struct.unpack("B", data[11:12])[0])
+            elif commandId == 5:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_AutonomousFlightMaxHorizontalSpeed = 5,
+                if verbose:
+                    print("AutonomousFlightMaxHorizontalSpeed [m/s]:", struct.unpack("f", data[11:12])[0])
+            elif commandId == 6:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_AutonomousFlightMaxVerticalSpeed = 6,
+                if verbose:
+                    print("AutonomousFlightMaxVerticalSpeed [m/s]:", struct.unpack("f", data[11:12])[0])
+            elif commandId == 7:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_AutonomousFlightMaxHorizontalAcceleration = 7,
+                if verbose:
+                    print("AutonomousFlightMaxHorizontalAcceleration [m/s2]:", struct.unpack("f", data[11:12])[0])
+            elif commandId == 8:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_AutonomousFlightMaxVerticalAcceleration = 8,
+                if verbose:
+                    print("AutonomousFlightMaxVerticalAcceleration [m/s2]:", struct.unpack("f", data[11:12])[0])
+            elif commandId == 9:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_AutonomousFlightMaxRotationSpeed = 9,
+                if verbose:
+                    print("AutonomousFlightMaxRotationSpeed [deg/s]:", struct.unpack("f", data[11:12])[0])
+            elif commandId == 10:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_BankedTurnChanged = 10,
+                if verbose:
+                    print("BankedTurnChanged state (1 enable, 0 disable):", struct.unpack("B", data[11:12])[0])
+            elif commandId == 11:
+                # ARCOMMANDS_ID_ARDRONE3_PILOTINGSETTINGSSTATE_CMD_MinAltitudeChanged = 11,
+                if verbose:
+                    print("MinAltitude:", struct.unpack("fff", data[11:11+3*4]))
             else:
-                #print"Unknown Piloting Settings State"+str( commandId)
+                print("Unknown or new version of Piloting Settings State", commandId, ",", end=' ')
                 printHex( data[:frameSize] )
 
         elif (commandProject, commandClass, commandId) == (1,8,0):
@@ -235,7 +304,7 @@ def parseData( data, robot, verbose=False ):
             # ARCOMMANDS_ID_ARDRONE3_MEDIARECORDSTATE_CMD_PICTURESTATECHANGED = 0,
             if verbose:
                 state, massStorageId = struct.unpack("BB", data[11:11+2])
-                #print"Picture State Changed:"+str(( state, massStorageId
+                print("Picture State Changed:", state, massStorageId)
 
         elif (commandProject, commandClass, commandId) == (1,8,1):
             # ARCOMMANDS_ID_ARDRONE3_CLASS_MEDIARECORDSTATE = 8,
@@ -243,7 +312,7 @@ def parseData( data, robot, verbose=False ):
             if verbose:
                 state, massStorageId = struct.unpack("IB", data[11:11+4+1])
                 states = ["stopped", "started", "failed", "autostopped"]
-                #print"Video State Changed:"+str(( states[state], massStorageId
+                print("Video State Changed:", states[state], massStorageId)
 
         elif (commandProject, commandClass) == (1,12):
             # ARCOMMANDS_ID_ARDRONE3_CLASS_SPEEDSETTINGSSTATE
@@ -259,21 +328,21 @@ def parseData( data, robot, verbose=False ):
                 # ARCOMMANDS_ID_ARDRONE3_SETTINGSSTATE_CMD_MOTORFLIGHTSSTATUSCHANGED = 4,
                 nbFlights, lastFlightDuration, totalFlightDuration = struct.unpack("HHI", data[11:11+8])
                 if verbose:
-                    print("Motor flights status"+str(( nbFlights, lastFlightDuration, totalFlightDuration)))
+                    print("Motor flights status", nbFlights, lastFlightDuration, totalFlightDuration)
             elif commandId == 5:
                 # ARCOMMANDS_ID_ARDRONE3_SETTINGSSTATE_CMD_MOTORERRORLASTERRORCHANGED = 5
                 lastError = struct.unpack("I", data[11:11+4])[0]
                 if verbose:
-                    print("Motor last error"+str( lastError))
+                    print("Motor last error", lastError)
             else:
                 if verbose:
-                    #print"Settings state"+str( commandId,
+                    print("Settings state", commandId, end=' ')
                     printHex( data[:frameSize] )
 
         elif (commandProject, commandClass, commandId) == (1,20,5):
             # ARCOMMANDS_ID_ARDRONE3_CLASS_PICTURESETTINGSSTATE = 20,            
             if verbose:
-                print("VIDEOAUTORECORDCHANGED"+str( struct.unpack("BB", data[11:11+2])))
+                print("VIDEOAUTORECORDCHANGED", struct.unpack("BB", data[11:11+2]))
 
         elif (commandProject, commandClass, commandId) == (1,22,0):
             # ARCOMMANDS_ID_ARDRONE3_CLASS_MEDIASTREAMINGSTATE = 22,
@@ -281,31 +350,31 @@ def parseData( data, robot, verbose=False ):
             state = struct.unpack("I", data[11:11+4])[0]
             states = ["enabled", "disabled", "error"]
             if verbose:
-                print("Video Enabled State"+str(( state, states[state])))
+                print("Video Enabled State", state, states[state])
 
         elif (commandProject, commandClass, commandId) == (1,24,0):
             # ARCOMMANDS_ID_ARDRONE3_CLASS_GPSSETTINGSSTATE = 24,
             # ARCOMMANDS_ID_ARDRONE3_GPSSETTINGSSTATE_CMD_HOMECHANGED = 0,
             if verbose:
-                print("Home changed"+str( struct.unpack("dd", data[11:11+16])))
+                print("Home changed", struct.unpack("dd", data[11:11+16]))
 
         elif (commandProject, commandClass, commandId) == (1,24,2):
             # ARCOMMANDS_ID_ARDRONE3_CLASS_GPSSETTINGSSTATE = 24,
             # ARCOMMANDS_ID_ARDRONE3_GPSSETTINGSSTATE_CMD_GPSFIXSTATECHANGED = 2,
             if verbose:
-                print("GPSFixStateChanged - fixed:"+str( struct.unpack("B", data[11:11+1])))
+                print("GPSFixStateChanged - fixed:", struct.unpack("B", data[11:11+1]))
 
         elif (commandProject, commandClass, commandId) == (129,3,0):
             if verbose:
-                print("GPSDebugState, numSat ="+str( struct.unpack("B", data[11:11+1])[0]))
+                print("GPSDebugState, numSat =", struct.unpack("B", data[11:11+1])[0])
 
         elif commandProject == 129:
             if verbose:
-                #print"DEBUG",
+                print("DEBUG", end=' ')
                 printHex( data[:frameSize] )
         else:
             if verbose:
-                #print"Unknown ACK:",
+                print("Unknown ACK:", end=' ')
                 printHex( data[:frameSize] )
     elif frameId == 0x0: # ARNETWORK_MANAGER_INTERNAL_BUFFER_ID_PING
         assert frameSize == 15, len(data)
@@ -314,7 +383,7 @@ def parseData( data, robot, verbose=False ):
         timestamp = seconds + nanoseconds/1000000000.
         robot.time = timestamp
         if verbose:
-            print("Time" +str( timestamp))
+            print("Time" , timestamp)
     data = data[frameSize:]
     return data
 
@@ -333,7 +402,7 @@ def createAckPacket( data ):
 #    payload = data[7:8] # strange
     payload = struct.pack("B", frameSeq)
 #    payload = struct.pack("B", 1)
-#    #print"ACK", repr(payload)
+#    print "ACK", repr(payload)
 
     frameType = ARNETWORKAL_FRAME_TYPE_ACK
     frameId = 0xFE # 0x7E + 0x80
@@ -401,7 +470,7 @@ class DummyRobot:
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print (__doc__)
+        print(__doc__)
         sys.exit(2)
     robot = DummyRobot()
     data = open(sys.argv[1], "rb").read()
@@ -410,3 +479,11 @@ if __name__ == "__main__":
 
 # vim: expandtab sw=4 ts=4 
 
+"""
+title="Relative move ended"
+desc="Relative move ended.\n
+Informs about the move that the drone managed to do and why it stopped."
+support="0901:3.3.0;090c:3.3.0"
+triggered="when the drone reaches its target or when it is interrupted by another
+[moveBy command](#1-0-7) or when an error occurs."/>
+"""
