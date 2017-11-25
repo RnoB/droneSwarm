@@ -9,10 +9,7 @@ import time
 import threading
 import sys
 
-from bebop import Bebop
-from commands import movePCMDCmd
-
-
+from core.bebop import *
 
 
 
@@ -189,13 +186,13 @@ class droneController:
 
     def landing(self):
         if self.droneConnected:
-            self.drone.landing()
+            self.drone.land()
 
 
     def move(self):
         roll = 0
         pitch = 0
-        yaw = 0
+        yaw = 60
         gaz = 0
         if self.droneConnected:
             drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
@@ -211,9 +208,12 @@ class droneController:
     def start(self):
         print('start the drone connection and control')
         try:
-            self.drone = Bebop()
+
+            metalog=None
+            self.drone = Bebop( metalog=metalog )
             self.drone.trim()
             self.droneConnected = True
+
         except:
             self.droneConnected = False
             

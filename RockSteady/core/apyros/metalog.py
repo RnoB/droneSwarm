@@ -13,8 +13,8 @@ import os
 import datetime
 import sys
 
-from apyros.logio import ReplayLog, LoggedSocket
-from apyros.sourcelogger import SourceLogger
+from .logio import ReplayLog, LoggedSocket
+from .sourcelogger import SourceLogger
 
 global g_checkAssert
 g_checkAssert = True # use command 'F' to disable it
@@ -52,7 +52,7 @@ class MetaLog:
             return filename
 
         for line in self.f:
-            print("LINE"+str( line.strip()))
+            print("LINE", line.strip())
             if line.startswith( prefix ):
                 ret = line.split()[1].strip()
                 assert ret.startswith("logs/")
@@ -83,7 +83,7 @@ class MetaLog:
         if self. replay:
             dt = None
             for line in self.f:
-                print("LINE"+str(line.strip()))
+                print("LINE", line.strip())
                 if line.startswith( "now:" ):
                     dt = eval(line[4:].strip())
                     break

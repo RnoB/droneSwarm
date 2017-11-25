@@ -7,8 +7,10 @@ import sys
 
 class ManualControlException( Exception ):
   pass
+def myKbhit():
+    return 0
 
-
+"""
 if sys.platform == 'win32':
     import msvcrt  # for kbhit
 
@@ -35,7 +37,7 @@ else:
             if event.type == pygame.KEYDOWN:
                 return 1 # or key value??
         return 0
-
+"""
 
 if __name__ == "__main__":
     # for testing of myKbhit on various OS
