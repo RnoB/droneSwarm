@@ -9,7 +9,6 @@ import droneSpecs
 import droneControl
 import struct
 
-
 state = 0
 running = True
 started = False
@@ -76,14 +75,14 @@ def droneCommServer(ip):
                 droneControl.TakeOff()
                 started = True
 
-
+                state =2
             if code == swarmNet.startCode[2]:
                 data = struct.pack('i', code+1)
                 try:
                     connection.sendall(data)
                 except:
                     print('sending did not work :/ but better not break everything')
-
+                state = 1
                 swarmNet.droneComm(swarmNet.leftBrainIP,code)
                 try:
                     droneController.landing()
@@ -120,7 +119,7 @@ def brainStatus(IP):
             if not lobotomyState:
                 print('lobotomy !!! ')
                 droneController.emergencyLanding()
-                state = 1
+                state = 0
 
         except:
             print('lobotomy !!! ')
@@ -153,32 +152,35 @@ def main():
     ti=t0
     state = 1
     #displayStart()
-    print('the left brain IP is : '+str(swarmNet.leftBrainIP))
-    statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.leftBrainIP,))
-    statusThread.daemon = True
-    statusThread.start()
-    statusThread = threading.Thread(target = brainStatus, args=(swarmNet.rightBrainIP,))
-    statusThread.daemon = True
-    statusThread.start()
-    statusThread = threading.Thread(target = droneControl, args=())
-    statusThread.daemon = True
-    statusThread.start()
+    # print('the left brain IP is : '+str(swarmNet.leftBrainIP))
+    # statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.leftBrainIP,))
+    # statusThread.daemon = True
+    # statusThread.start()
+    # statusThread = threading.Thread(target = brainStatus, args=(swarmNet.rightBrainIP,))
+    # statusThread.daemon = True
+    # statusThread.start()
+    # statusThread = threading.Thread(target = droneControl, args=())
+    # statusThread.daemon = True
+    # statusThread.start()
     try:
 
-        vision.sectionCrop(droneSpecs.leftEye)
-        vision.start()
+        # vision.sectionCrop(droneSpecs.leftEye)
+        # vision.start()
         started = True
         droneController.start()
+        droneController.TakeOff()
+        time.sleep(4)
+        droneController.landing()
         droneConnected =True
     except:
         started=True
         droneConnected =False
 
-    while running:
+    # while running:
 
         
-        time.sleep(60)
-        print('---- waiting for your drones')
+    #     time.sleep(60)
+    #     print('---- waiting for your drones')
         
 
 
