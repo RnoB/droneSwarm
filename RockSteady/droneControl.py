@@ -47,12 +47,12 @@ class visionAnalyzer(PiRGBAnalysis):
         #thres = cv2.erode(thres,kernel,iterations = 1)
         #thres = cv2.dilate(thres,kernel,iterations = 3)
         im2,contours,hierarchy = cv2.findContours(thres ,cv2.RETR_LIST ,cv2.CHAIN_APPROX_SIMPLE)
-        cv2.drawContours(thres,contours,-1,(0,0,255),2)
+        #cv2.drawContours(thres,contours,-1,(0,0,255),2)
 
 
         for contour in contours:
             if len(contour)>20:
-                contX = ((contour[:,0,0]-self.xCrop[4])/(self.xCrop[-1]))
+                contX = ((contour[:,0,0]-self.xCrop[-1])/(self.xCrop[-1]))
                 contY = ((contour[:,0,1]-self.xCrop[5])/(self.xCrop[-1]))
                 phi = np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2))))
                 theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
