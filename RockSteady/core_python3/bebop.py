@@ -10,13 +10,13 @@ import datetime
 import struct
 import time
 
-from navdata import *
-from commands import *
-from video import VideoFrames
+from .navdata import *
+from .commands import *
+from .video import VideoFrames
 
 # this will be in new separate repository as common library fo robotika Python-powered robots
-from apyros.metalog import MetaLog, disableAsserts
-from apyros.manual import myKbhit, ManualControlException
+from .apyros.metalog import MetaLog, disableAsserts
+from .apyros.manual import myKbhit, ManualControlException
 
 
 # hits from https://github.com/ARDroneSDK3/ARSDKBuildUtils/issues/5
@@ -68,7 +68,7 @@ class Bebop:
         filename = "tmp.bin" # TODO combination outDir + date/time
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # TCP
         s.connect( (HOST, DISCOVERY_PORT) )
-        s.send( '{"controller_type":"computer", "controller_name":"katarina", "d2c_port":"43210"}' )
+        s.send( b'{"controller_type":"computer", "controller_name":"katarina", "d2c_port":"43210"}' )
         f = open( filename, "wb" )
         while True:
             data = s.recv(10240)
@@ -93,15 +93,17 @@ class Bebop:
 
         while len(self.buf) == 0:
             data = self.navdata.recv(80960)
-            self.buf += data
+            self.buf = bytearray()
+            # self.buf += data
+            self.buf.extend(data)
         data, self.buf = cutPacket( self.buf )
         return data
 
     def _parseData( self, data ):
         try:
             parseData( data, robot=self, verbose=False )
-        except AssertionError, e:
-            print "AssertionError", e
+        except AssertionError as e:
+            print("AssertionError", e)
 
 
     def update( self, cmd=None, ackRequest=False ):
@@ -109,6 +111,8 @@ class Bebop:
         if cmd is None:
             data = self._update( None )
         else:
+            print("packData")
+            print(packData(cmd, ackRequest=ackRequest))
             data = self._update( packData(cmd, ackRequest=ackRequest) )
         while True:
             if ackRequired(data):
@@ -126,7 +130,7 @@ class Bebop:
                     if self.videoCbkResults:
                         ret = self.videoCbkResults()
                         if ret is not None:
-                            print ret
+                            print(ret)
                             self.lastImageResult = ret
                 data = self._update( createVideoAckPacket(data) )
             else:
@@ -161,37 +165,39 @@ class Bebop:
 
 
     def takeoff( self ):
-        self.update( videoRecordingCmd( on=True ) )
-        print "Battery:", self.battery
-        for i in xrange(10):
+        # self.update( videoRecordingCmd( on=True ) )
+        print("Battery:", self.battery)
+        for i in range(10):
             #print i,
             self.update( cmd=None )
-        print
-        print "Taking off ...",
+        print()
+        print("Taking off ...", end=' ')
         self.update( cmd=takeoffCmd() )
         prevState = None
-        for i in xrange(100):
+        for i in range(100):
             #print i,
             self.update( cmd=None )
             if self.flyingState != 1 and prevState == 1:
                 break
             prevState = self.flyingState
-        print "FLYING"
+        print("FLYING")
         
     def land( self ):
-        print "Landing ...",
+        print("Landing ...", end=' ')
+        cmd = landCmd()
+        print(cmd)
         self.update( cmd=landCmd() )
-        for i in xrange(100):
+        for i in range(100):
             #print i,
             self.update( cmd=None )
             if self.flyingState == 0: # landed
                 break
-        print "LANDED"
+        print("LANDED")
         self.update( videoRecordingCmd( on=False ) )
-        for i in xrange(30):
+        for i in range(30):
             #print i,
             self.update( cmd=None )
-        print "Battery:", self.battery
+        print("Battery:", self.battery)
 
     def hover( self ):
         self.update( cmd=movePCMDCmd( active=False, roll=0, pitch=0, yaw=0, gaz=0 ) ) #Modified
@@ -200,15 +206,15 @@ class Bebop:
         self.update( cmd=emergencyCmd() )
 
     def trim( self ):
-        print "Trim:", 
+        print("Trim:", end=' ') 
         self.flatTrimCompleted = False
-        for i in xrange(10):
-            print i,
+        for i in range(10):
+            print(i, end=' ')
             self.update( cmd=None )
-        print
+        print()
         self.update( cmd=trimCmd() )
-        for i in xrange(10):
-            print i,
+        for i in range(10):
+            print(i, end=' ')
             self.update( cmd=None )
             if self.flatTrimCompleted:
                 break
@@ -242,14 +248,14 @@ class Bebop:
         self.update( cmd=cancelMoveToCmd() )
 
     def wait( self, duration ):
-        print "Wait", duration
+        print("Wait", duration)
         assert self.time is not None
         startTime = self.time
         while self.time-startTime < duration:
             self.update()
 
     def flyToAltitude( self, altitude, timeout=3.0 ):
-        print "Fly to altitude", altitude, "from", self.altitude
+        print("Fly to altitude", altitude, "from", self.altitude)
         speed = 20 # 20%
         assert self.time is not None
         assert self.altitude is not None
@@ -267,13 +273,13 @@ class Bebop:
 ###############################################################################################
 
 def testCamera( robot ):
-    for i in xrange(10):
-        print -i,
+    for i in range(10):
+        print(-i, end=' ')
         robot.update( cmd=None )
     robot.resetHome()
     robot.videoEnable()
-    for i in xrange(100):
-        print i,
+    for i in range(100):
+        print(i, end=' ')
         robot.update( cmd=None )
         robot.moveCamera( tilt=i, pan=i ) # up & right
 
@@ -282,22 +288,22 @@ def testEmergency( robot ):
     "test of reported state change"
     robot.takeoff()
     robot.emergency()
-    for i in xrange(10):
-        print i,
+    for i in range(10):
+        print(i, end=' ')
         robot.update( cmd=None )
 
 
 def testTakeoff( robot ):
     robot.videoEnable()
     robot.takeoff()
-    for i in xrange(100):
-        print i,
+    for i in range(100):
+        print(i, end=' ')
         robot.update( cmd=None )
     robot.land()
-    for i in xrange(100):
-        print i,
+    for i in range(100):
+        print(i, end=' ')
         robot.update( cmd=None )
-    print "Battery:", robot.battery
+    print("Battery:", robot.battery)
 
 
 def testManualControlException( robot ):
@@ -306,9 +312,9 @@ def testManualControlException( robot ):
         robot.trim()
         robot.takeoff()
         robot.land()
-    except ManualControlException, e:
-        print
-        print "ManualControlException"
+    except ManualControlException as e:
+        print()
+        print("ManualControlException")
         if robot.flyingState is None or robot.flyingState == 1: # taking off
             # unfortunately it is not possible to land during takeoff for ARDrone3 :(
             robot.emergency()
@@ -324,9 +330,9 @@ def testFlying( robot ):
         robot.wait( 2.0 )
         robot.flyToAltitude( 1.0 )
         robot.land()
-    except ManualControlException, e:
-        print
-        print "ManualControlException"
+    except ManualControlException as e:
+        print()
+        print("ManualControlException")
         if robot.flyingState is None or robot.flyingState == 1: # taking off
             # unfortunately it is not possible to land during takeoff for ARDrone3 :(
             robot.emergency()
@@ -339,14 +345,14 @@ def testFlyForward( robot ):
         speed = 20
         robot.trim()
         robot.takeoff()
-        for i in xrange(1000):
+        for i in range(1000):
             robot.update( cmd=movePCMDCmd( True, 0, speed, 0, 0 ) )
-            print robot.altitude
+            print(robot.altitude)
         robot.update( cmd=movePCMDCmd( True, 0, 0, 0, 0 ) )
         robot.land()
-    except ManualControlException, e:
-        print
-        print "ManualControlException"
+    except ManualControlException as e:
+        print()
+        print("ManualControlException")
         if robot.flyingState is None or robot.flyingState == 1: # taking off
             # unfortunately it is not possible to land during takeoff for ARDrone3 :(
             robot.emergency()
@@ -354,14 +360,14 @@ def testFlyForward( robot ):
 
 
 def testTakePicture( robot ):
-    print "TEST take picture"
+    print("TEST take picture")
     robot.videoEnable()
-    for i in xrange(10):
-        print i,
+    for i in range(10):
+        print(i, end=' ')
         robot.update( cmd=None )
     robot.takePicture()
-    for i in xrange(10):
-        print i,
+    for i in range(10):
+        print(i, end=' ')
         robot.update( cmd=None )
 
 g_testVideoIndex = 0
@@ -373,11 +379,11 @@ def videoCallback( data, robot=None, debug=False ):
 
 
 def testVideoProcessing( robot ):
-    print "TEST video"
+    print("TEST video")
     robot.videoCbk = videoCallback
     robot.videoEnable()
     prevVideoIndex = 0
-    for i in xrange(400):
+    for i in range(400):
         if i % 10 == 0:
             if prevVideoIndex == g_testVideoIndex:
                 sys.stderr.write('.')
@@ -385,36 +391,36 @@ def testVideoProcessing( robot ):
                 sys.stderr.write('o')
             prevVideoIndex = g_testVideoIndex
         if i == 200:
-            print "X"
+            print("X")
             robot.update( cmd=movePCMDCmd( False, 0, 0, 0, 0 ) )
         robot.update( cmd=None )
 
 def testVideoRecording( robot ):
     robot.videoEnable()
-    for i in xrange(100):
-        print i,
+    for i in range(100):
+        print(i, end=' ')
         robot.update( cmd=None )
         if robot.time is not None:
             break
-    print "START"
+    print("START")
     robot.update( cmd=videoRecordingCmd( on=True ) )
     robot.wait( 10.0 )
-    print "STOP"
+    print("STOP")
     robot.update( cmd=videoRecordingCmd( on=False ) )
     robot.wait( 2.0 )
 
 
 def testSpin( robot ):
     "the motors do not spin - the behavior is different to Rolling Spider"
-    for i in xrange(10):
+    for i in range(10):
         robot.update( cmd=movePCMDCmd( True, 0, 0, 0, 0 ) )
-    for i in xrange(10):
+    for i in range(10):
         robot.update( cmd=movePCMDCmd( False, 0, 0, 0, 0 ) )
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print __doc__
+        print(__doc__)
         sys.exit(2)
     metalog=None
     if len(sys.argv) > 2:
@@ -433,7 +439,7 @@ if __name__ == "__main__":
 #    testVideoProcessing( robot )
 #    testVideoRecording( robot )
 #    testSpin( robot )
-    print "Battery:", robot.battery
+    print("Battery:", robot.battery)
 
 # vim: expandtab sw=4 ts=4 
 

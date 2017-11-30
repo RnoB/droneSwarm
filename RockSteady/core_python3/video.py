@@ -7,7 +7,7 @@
 import sys
 import struct
 import os
-from navdata import cutPacket,videoAckRequired
+from .navdata import cutPacket,videoAckRequired
 
 class VideoFrames:
     def __init__( self, onlyIFrames=False, verbose=True ):
@@ -32,14 +32,14 @@ class VideoFrames:
                 for i,d in enumerate(self.parts):
                     if d is None:
                         if self.verbose:
-                            print (self.currentFrameNumber, i, len(self.parts))
+                            print((self.currentFrameNumber, i, len(self.parts)))
                         complete = False
                         continue
                     s += d
                 if complete:
                     self.frames.append( (self.currentFrameNumber, self.currentFrameFlags, s) )
             if self.verbose:
-                print "processing", frameNumber
+                print("processing", frameNumber)
                 if self.statFirst is None:
                     self.statFirst = frameNumber
                 self.statLast = frameNumber
@@ -53,7 +53,7 @@ class VideoFrames:
         if not self.onlyIFrames or frameFlags == 1:
             if self.parts[ fragmentNumber ] is not None:
                 if self.verbose:
-                    print "duplicity", (frameNumber, fragmentNumber)
+                    print("duplicity", (frameNumber, fragmentNumber))
             self.parts[ fragmentNumber ] = data
 
     def getFrameEx( self ):
@@ -72,8 +72,8 @@ class VideoFrames:
     def stat( self ):
         if self.verbose:
             if self.statFirst != self.statLast:
-                print "Stat:", self.statFirst, self.statLast, self.statCount, 
-                print "%.1f%%" %  (100*self.statCount/float(self.statLast-self.statFirst+1),)
+                print("Stat:", self.statFirst, self.statLast, self.statCount, end=' ') 
+                print("%.1f%%" %  (100*self.statCount/float(self.statLast-self.statFirst+1),))
 
 
 def navdata2video( inputFile, outputFile, outDir = ".", dumpIndividualFrames=False, startIndex=0 ):
@@ -99,7 +99,7 @@ def navdata2video( inputFile, outputFile, outDir = ".", dumpIndividualFrames=Fal
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print __doc__
+        print(__doc__)
         sys.exit(2)
     if len(sys.argv) == 3:
         navdata2video( sys.argv[1], sys.argv[2] )

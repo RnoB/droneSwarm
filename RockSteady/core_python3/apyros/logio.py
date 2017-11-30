@@ -33,7 +33,10 @@ class LoggedSocket:
 
     def separator( self, sep ):
         "data log separator"
-        self.logf.write( sep )
+        if isinstance(sep, str):
+            self.logf.write( sep.encode('utf-8') )
+        else:
+            self.logf.write( sep )
         self.logf.flush()
 
 

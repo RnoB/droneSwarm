@@ -64,9 +64,9 @@ class visionAnalyzer(PiRGBAnalysis):
                 self.dpdV = self.dpdV + (math.cos(phiMax)+math.cos(phiMin))
 
             
-        cv2.imwrite('./imTest/image'+str(self.i)+'.jpg',frameC)
-        cv2.imwrite('./imTest/thres'+str(self.i)+'.jpg',thres)
-        print('image'+str(self.i)+'.jpg')
+        #cv2.imwrite('./imTest/image'+str(self.i)+'.jpg',frameC)
+        #cv2.imwrite('./imTest/thres'+str(self.i)+'.jpg',thres)
+        #print('image'+str(self.i)+'.jpg')
         self.i=self.i+1
         t1=time.time()
         #print('fps : ' + str(int(1/(t1-self.t0))))
@@ -178,7 +178,7 @@ class droneController:
     def TakeOff(self):
         if self.droneConnected:
             self.drone.takeoff()
-            self.drone.flyToAltitude(zFlight)
+            #self.drone.flyToAltitude(zFlight)
 
     def emergencyLanding(self):
         if self.droneConnected:
@@ -194,8 +194,8 @@ class droneController:
         pitch = 0
         yaw = 60
         gaz = 0
-        if self.droneConnected:
-            drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
+        #if self.droneConnected:
+            #drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
 
 
     def updateVision(self,Vu,Vp,dVu,dVp):

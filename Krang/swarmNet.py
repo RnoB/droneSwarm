@@ -133,7 +133,7 @@ def requestStatus(ip):
 def droneComm(ip,dronePort = droneCommLeftPort,code = requestStatusCode,dataSend = []):
     status = 0
     socketClient = socket.socket()
-    socketClient.settimeout(10)
+    socketClient.settimeout(1)
     socketClient.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     connect = 0
     fishN=0

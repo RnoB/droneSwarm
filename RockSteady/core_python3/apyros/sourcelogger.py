@@ -16,7 +16,7 @@ class SourceLogger:
         self.counterLimit = int(self.file.readline())
       except ValueError:
         # case when given device was not started
-        print "EMPTY FILE!!!"
+        print("EMPTY FILE!!!")
         self.counterLimit = 10000 # "infinity"
 
 

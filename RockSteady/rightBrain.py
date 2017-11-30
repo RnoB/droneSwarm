@@ -37,7 +37,7 @@ def droneCommServer(ip):
         except:
             print('-Control Center -- binding failed')
             binded = False
-            time.sleep(20)
+            time.sleep(5)
     server.listen(1)
     while running:
         print('--- waiting for a connection')
@@ -50,6 +50,7 @@ def droneCommServer(ip):
             code = struct.unpack('i',connection.recv(4))[0]
             print('------ code : '+ str(code))
             if code == swarmNet.requestStatusCode:
+                print('state : '+str(state))
                 data = struct.pack('ii', swarmNet.sendStatusCode,state)
                 try:
                     connection.sendall(data)
@@ -62,7 +63,7 @@ def droneCommServer(ip):
                 except:
                     print('sending did not work :/ but better not break everything')
                 started = True
-                swarmNet.droneComm(swarmNet.leftBrainIP,code)
+                swarmNet.droneComm(swarmNet.leftBrainIP,code = code)
                 
             if code == swarmNet.startCode[2]:
                 data = struct.pack('i', code+1)
@@ -71,7 +72,7 @@ def droneCommServer(ip):
                 except:
                     print('sending did not work :/ but better not break everything')
                 started = False
-                swarmNet.droneComm(swarmNet.leftBrainIP,code)
+                swarmNet.droneComm(swarmNet.leftBrainIP,code = code)
                 
         except:
             pass
@@ -80,7 +81,7 @@ def droneCommServer(ip):
 
 
 def brainStatus(IP):
-    global rightState
+    global state
     tSleep = 10
     while running:
         print('--- Check Brain Connectivity')
@@ -88,9 +89,13 @@ def brainStatus(IP):
         try:
             leftState = swarmNet.droneComm(IP)
             print('lobotomy ? '+str(leftState ))
-            rightState = leftState + rightState
+            if leftState == 1:
+                state = 2
+            else:
+                state = 1
         except:
             print('lobotomy !!! ')
+            state = 1
 
 
 
@@ -110,6 +115,7 @@ def main():
     global running
     global started
     t0 = time.time()
+    time.sleep(30)
     ti=t0
     state = 1
     #displayStart()

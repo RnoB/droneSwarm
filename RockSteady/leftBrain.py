@@ -72,19 +72,15 @@ def droneCommServer(ip):
                     connection.sendall(data)
                 except:
                     print('sending did not work :/ but better not break everything')
-                
-                droneControl.TakeOff()
+                #droneController.start()
+                droneController.TakeOff()
                 started = True
 
 
             if code == swarmNet.startCode[2]:
                 data = struct.pack('i', code+1)
-                try:
-                    connection.sendall(data)
-                except:
-                    print('sending did not work :/ but better not break everything')
 
-                swarmNet.droneComm(swarmNet.leftBrainIP,code)
+                
                 try:
                     droneController.landing()
                 except:
@@ -150,6 +146,7 @@ def main():
     global droneConnected
     global started
     t0 = time.time()
+    time.sleep(30)
     ti=t0
     state = 1
     #displayStart()
