@@ -40,8 +40,8 @@ class visionAnalyzer(PiRGBAnalysis):
 
 
         
-        cv2.namedWindow('frame',cv2.WINDOW_NORMAL)
-        cv2.resizeWindow('frame',1280,976)
+        #v2.namedWindow('frame',cv2.WINDOW_NORMAL)
+        #cv2.resizeWindow('frame',1280,976)
         hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
         ret,thres = cv2.threshold(hsv[:,:,2],self.threshold,255,cv2.THRESH_BINARY)
         if self.circleStep == 0:
@@ -72,8 +72,8 @@ class visionAnalyzer(PiRGBAnalysis):
                 self.radius = radius
         self.circleStep = self.circleStep+1
         #cv2.imshow('frame',self.thres2)
-        cv2.imshow('frame',frame)
-        cv2.waitKey(1)
+        #cv2.imshow('frame',frame)
+        #cv2.waitKey(1)
         if self.radiusStep == 20:
             
             
