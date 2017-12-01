@@ -85,9 +85,9 @@ class vision:
 
 
     def sectionCrop(self,crop):
-        xMin = crop[0]
-        yMin = crop[1]
-        RMax = crop[2]
+        xMin = crop[1]
+        yMin = crop[2]
+        RMax = crop[0]
         xMax = xMin+2*RMax
         yMax = yMin+2*RMax
         xCenter = xMin+RMax
