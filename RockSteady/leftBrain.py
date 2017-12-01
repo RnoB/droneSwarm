@@ -161,8 +161,8 @@ def main():
     statusThread.daemon = True
     statusThread.start()
     try:
-
-        vision.sectionCrop(droneSpecs.leftEye)
+        eyeProp = np.loadtxt('droneSpecs.csv')
+        vision.sectionCrop(eyeProp)
         vision.start()
         started = True
         droneController.start()

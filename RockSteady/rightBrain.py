@@ -135,7 +135,8 @@ def main():
     statusThread.start()
 
     try:
-        vision.sectionCrop(droneSpecs.rightEye)
+        eyeProp = np.loadtxt('droneSpecs.csv')
+        vision.sectionCrop(eyeProp)
         vision.start()
         started = True
     except ValueError:
