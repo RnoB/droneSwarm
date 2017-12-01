@@ -8,8 +8,8 @@ import random
 import time
 import threading
 import sys
-
-from core.bebop import *
+import csv
+import os
 
 
 
@@ -25,26 +25,66 @@ class visionAnalyzer(PiRGBAnalysis):
 
     xCrop = []
     t0 = 0
+    thres2 = []
+    fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
 
-    fgbg = cv2.createBackgroundSubtractorMOG()
-
+    circleStep = 0
+    radiusStep = 0
+    center = (0,0)
+    radius = 0
     def __init__(self,camera):
         super(visionAnalyzer,self).__init__(camera)
-        self.xCrop = sectionCrop
+        
         
 
     def analyze(self,frame):
 
 
-
+        
+        cv2.namedWindow('frame',cv2.WINDOW_NORMAL)
+        cv2.resizeWindow('frame',1280,976)
+        hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
         fgmask = self.fgbg.apply(frame)
-        cv2.imshow('frame',fgmask)
-        cv2.waitKeys(1)
+        ret,thres = cv2.threshold(hsv[:,:,2],self.threshold,255,cv2.THRESH_BINARY)
+        if self.circleStep == 0:
+            self.thres2 = thres
+        else:
+            self.thres2 = thres + self.thres2
+        #cv2.imshow('frame',self.thres2)
         #self.threshold=self.threshold+1
         #if self.threshold>200:
         #    self.threshold = 0
 
-        #print('thres : ' + str(self.threshold))
+        im2,contours,hierarchy = cv2.findContours(self.thres2 ,cv2.RETR_LIST ,cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(frame,contours,-1,(0,0,255),2)
+
+        for contour in contours:
+            if len(contour)>1000:
+                (x,y),radius = cv2.minEnclosingCircle(contour)
+                center = (int(x),int(y))
+                radius = int(radius)
+                print(center)
+                print(radius)
+                cv2.circle(frame,center,radius,(255,0,0),2)
+                if self.center == center and self.radius == radius:
+                    self.radiusStep = self.radiusStep + 1
+                else:
+                    self.radiusStep = 0
+                self.center = center
+                self.radius = radius
+        self.circleStep = self.circleStep+1
+        #cv2.imshow('frame',self.thres2)
+        cv2.imshow('frame',frame)
+        cv2.waitKey(1)
+        if self.radiusStep == 20:
+            
+            
+            rad = np.asarray([self.radius,self.center[0],self.center[1]])
+            np.savetxt('droneSpecs.csv',rad,delimiter=",")
+            
+            
+            os.system('killall python3')
+        
 
 
 
@@ -71,20 +111,20 @@ class vision:
 
         with picamera.PiCamera() as camera:
 
-            camera.resolution = (1296,976)
+            camera.resolution = (1280,976)
             #camera.zoom = ( .3563 , 0.2875 , 228/640 , 228/480 )
-            camera.framerate = 10
-            camera.iso = 800
-            camera.shutter_speed = 100000
-            camera.awb_mode = 'off'
-            camera.awb_gains=(8,8)
+            camera.framerate = 30
+            camera.iso = 400
+            camera.shutter_speed = 2000
+            #camera.awb_mode = 'off'
+            #camera.awb_gains=(8,8)
             #camera.exposure_speed = 100
             #camera.exposure_mode = 'night'
-            camera.exposure_compensation = 25
+            #camera.exposure_compensation = 25
         
-            firstRound = True
+            firstRound = False
             running =True 
-    
+            print('starting')
             try:
                 k = 0
 
