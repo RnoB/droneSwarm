@@ -25,9 +25,15 @@ class visionAnalyzer(PiRGBAnalysis):
 
     xCrop = []
     t0 = 0
+
+    circularMask = []
     def __init__(self,camera,sectionCrop):
         super(visionAnalyzer,self).__init__(camera)
         self.xCrop = sectionCrop
+        self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
+       
+        cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
+
         
 
     def analyze(self,frame):
@@ -40,6 +46,7 @@ class visionAnalyzer(PiRGBAnalysis):
         #if self.threshold>200:
         #    self.threshold = 0
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
+        frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
         ret,thres = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY)
         #ret,thres2 = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY_INV)
         #thres = cv2.multiply(thres,thres2)
@@ -85,9 +92,9 @@ class vision:
 
 
     def sectionCrop(self,crop):
-        xCenter = crop[1]
-        yCenter = crop[2]
-        RMax = crop[0]
+        xCenter = int(crop[1])
+        yCenter = int(crop[2])
+        RMax = int(crop[0])
         xMax = xCenter+RMax
         yMax = yCenter+RMax
         xMin = xCenter-RMax

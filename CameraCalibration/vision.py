@@ -26,7 +26,6 @@ class visionAnalyzer(PiRGBAnalysis):
     xCrop = []
     t0 = 0
     thres2 = []
-    fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
 
     circleStep = 0
     radiusStep = 0
@@ -44,7 +43,6 @@ class visionAnalyzer(PiRGBAnalysis):
         cv2.namedWindow('frame',cv2.WINDOW_NORMAL)
         cv2.resizeWindow('frame',1280,976)
         hsv = cv2.cvtColor(frame,cv2.COLOR_BGR2HSV)
-        fgmask = self.fgbg.apply(frame)
         ret,thres = cv2.threshold(hsv[:,:,2],self.threshold,255,cv2.THRESH_BINARY)
         if self.circleStep == 0:
             self.thres2 = thres
