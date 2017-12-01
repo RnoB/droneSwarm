@@ -91,7 +91,7 @@ class vision:
         xMax = xCenter+RMax
         yMax = yCenter+RMax
         xMin = xCenter-RMax
-        yMMin = yCenter-RMax
+        yMin = yCenter-RMax
         self.xCrop = [xMin,xMax,yMin,yMax,xCenter,yCenter,RMax]
 
     def visionUpdater(self):
