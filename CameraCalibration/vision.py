@@ -25,52 +25,25 @@ class visionAnalyzer(PiRGBAnalysis):
 
     xCrop = []
     t0 = 0
-    def __init__(self,camera,sectionCrop):
+
+    fgbg = cv2.createBackgroundSubtractorMOG()
+
+    def __init__(self,camera):
         super(visionAnalyzer,self).__init__(camera)
         self.xCrop = sectionCrop
         
 
     def analyze(self,frame):
 
-        self.duV = 0
-        self.dudV = 0
-        self.dpV = 0
-        self.dpdV = 0
+
+
+        fgmask = self.fgbg.apply(frame)
+        cv2.imshow('frame',fgmask)
+        cv2.waitKeys(1)
         #self.threshold=self.threshold+1
         #if self.threshold>200:
         #    self.threshold = 0
-        frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
-        ret,thres = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY)
-        #ret,thres2 = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY_INV)
-        #thres = cv2.multiply(thres,thres2)
-        #kernel = np.ones((5,5),np.uint8)
-        #thres = cv2.erode(thres,kernel,iterations = 1)
-        #thres = cv2.dilate(thres,kernel,iterations = 3)
-        im2,contours,hierarchy = cv2.findContours(thres ,cv2.RETR_LIST ,cv2.CHAIN_APPROX_SIMPLE)
-        #cv2.drawContours(thres,contours,-1,(0,0,255),2)
 
-
-        for contour in contours:
-            if len(contour)>20:
-                contX = ((contour[:,0,0]-self.xCrop[-1])/(self.xCrop[-1]))
-                contY = ((contour[:,0,1]-self.xCrop[5])/(self.xCrop[-1]))
-                phi = np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2))))
-                theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
-                phiMax = np.max(phi)
-                phiMin = np.min(phi)
-                self.duV = self.duV + (math.sin(phiMax)-math.sin(phiMin))
-                self.dpV = self.dpV - (math.cos(phiMax)-math.cos(phiMin))
-                self.dudV = self.dudV + (math.sin(phiMax)+math.sin(phiMin))
-                self.dpdV = self.dpdV + (math.cos(phiMax)+math.cos(phiMin))
-
-            
-        #cv2.imwrite('./imTest/image'+str(self.i)+'.jpg',frameC)
-        #cv2.imwrite('./imTest/thres'+str(self.i)+'.jpg',thres)
-        #print('image'+str(self.i)+'.jpg')
-        self.i=self.i+1
-        t1=time.time()
-        #print('fps : ' + str(int(1/(t1-self.t0))))
-        self.t0 = t1
         #print('thres : ' + str(self.threshold))
 
 
@@ -115,7 +88,7 @@ class vision:
             try:
                 k = 0
 
-                with visionAnalyzer(camera,self.xCrop) as anal:
+                with visionAnalyzer(camera) as anal:
                     camera.start_recording(anal, 'bgr')
                 #for frame in enumerate(camera.capture_continuous(rawCapture, 'rgb')):#,resize=(228,228))):
                     while running:
@@ -158,70 +131,4 @@ class vision:
     
     def __init__(self):  
         print('vision is intialized -- Ready to start')
-
-
-
-class droneController:
-    drone = []
-    zFlight = 0.5
-    Vu = 0
-    Vp = 0
-    dVu = 0
-    dVp = 0
-    droneConnected =False
-#    if len(sys.argv) > 2:
-#        metalog = MetaLog( filename=sys.argv[2] )
-#    if len(sys.argv) > 3 and sys.argv[3] == 'F':
-#        disableAsserts()
-
-
-    def TakeOff(self):
-        if self.droneConnected:
-            self.drone.takeoff()
-            #self.drone.flyToAltitude(zFlight)
-
-    def emergencyLanding(self):
-        if self.droneConnected:
-            self.drone.emergency()
-
-    def landing(self):
-        if self.droneConnected:
-            self.drone.land()
-
-
-    def move(self):
-        roll = 0
-        pitch = 0
-        yaw = 60
-        gaz = 0
-        #if self.droneConnected:
-            #drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
-
-
-    def updateVision(self,Vu,Vp,dVu,dVp):
-        self.Vu = Vu
-        self.Vp = Vp
-        self.dVu = dVu
-        self.dVp = dVp
-
-
-    def start(self):
-        print('start the drone connection and control')
-        try:
-
-            metalog=None
-            self.drone = Bebop( metalog=metalog )
-            self.drone.trim()
-            self.droneConnected = True
-
-        except:
-            self.droneConnected = False
-            
-
-
-    def __init__(self):
-        self.zFlight = 0.5
-        metalog=None
-        print('Drone Control is intialized -- Ready to start')
-
 
