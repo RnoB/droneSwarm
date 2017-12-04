@@ -227,7 +227,7 @@ class droneController:
         yaw = self.pm*(self.rp*self.Vp+self.ap*self.dVp)
         gaz = 0
         if self.droneConnected:
-            drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
+            self.drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
 
 
     def updateVision(self,Vu,Vp,dVu,dVp):
