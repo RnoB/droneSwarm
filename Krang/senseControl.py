@@ -173,6 +173,8 @@ class senseController():
                     self.pushed_down()
                 if event.action == 'released' and event.direction == 'down':
                     self.pushed_right()
+                if event.action == 'released' and event.direction == 'up':
+                    self.pushed_left()
                 if event.action == 'released' and event.direction == 'middle':
                     self.pushed_middle()
         #    time.sleep(60)
