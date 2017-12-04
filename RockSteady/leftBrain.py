@@ -100,7 +100,7 @@ def droneCommServer(ip):
             if code == swarmNet.updateParameters[0]:
                 data= struct.unpack('dddddddd',connection.recv(64))
                 print('new parameters : '+str(data))
-                updateParameters(au=data[0],ru=data[1],ap=data[2],rp=data[3],um=data[4],pm=data[5],v0=data[6],a=data[7])
+                droneController.updateParameters(au=data[0],ru=data[1],ap=data[2],rp=data[3],um=data[4],pm=data[5],v0=data[6],a=data[7])
                 data = struct.pack('i', code+1)
                 try:
                     connection.sendall(data)

@@ -71,6 +71,8 @@ class senseController():
         if not self.checkingStatus:
             self.checkingStatus = True
             for k in range(0,len(swarmNet.dronesIP)):
+                self.sense.set_pixel(k,0,black)
+                self.sense.set_pixel(k,1,black)
                 self.status[k] = swarmNet.droneComm(swarmNet.dronesIP[k],dronePort = swarmNet.droneCommRightPort)
                 if self.status[k] == 0:
                     self.sense.set_pixel(k,0,blue)

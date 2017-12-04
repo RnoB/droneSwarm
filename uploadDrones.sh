@@ -1,4 +1,11 @@
 #!/bin/sh
-sshpass -p raspberry scp -r ./Krang/swarmNet.py pi@192.168.30.12:~/RockSteady/
-sshpass -p raspberry scp -r ./RockSteady/* pi@192.168.30.12:~/RockSteady/
-sshpass -p raspberry scp -r ./DroneSpecs/Drone_0002/* pi@192.168.30.12:~/RockSteady/
+sshpass -p raspberry ssh pi@192.168.0.151 "cd droneSwarm;git pull origin master \"$1\""
+sshpass -p raspberry ssh pi@192.168.0.161 "cd droneSwarm;git pull origin master \"$1\""
+#sshpass -p raspberry ssh pi@192.168.0.152 "cd droneSwarm;git pull origin master \"$1\""
+#sshpass -p raspberry ssh pi@192.168.0.162 "cd droneSwarm;git pull origin master \"$1\""
+#sshpass -p raspberry ssh pi@192.168.0.153 "cd droneSwarm;git pull origin master \"$1\""
+#sshpass -p raspberry ssh pi@192.168.0.163 "cd droneSwarm;git pull origin master \"$1\""
+sshpass -p raspberry ssh pi@192.168.0.154 "cd droneSwarm;git pull origin master \"$1\""
+sshpass -p raspberry ssh pi@192.168.0.164 "cd droneSwarm;git pull origin master \"$1\""
+sshpass -p raspberry ssh pi@192.168.0.155 "cd droneSwarm;git pull origin master \"$1\""
+sshpass -p raspberry ssh pi@192.168.0.165 "cd droneSwarm;git pull origin master \"$1\""
