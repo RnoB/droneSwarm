@@ -24,6 +24,8 @@ dVpR = 0
 vision = droneControl.vision()
 droneController = droneControl.droneController()
 
+tStatus = 0
+tStatusEmergency = 30
 
 def droneCommServer(ip):
     print(' - - -- starting the drone center command')
@@ -35,6 +37,7 @@ def droneCommServer(ip):
     global dVuR
     global dVpR
     global started
+    global tStatus
     backlog = 1  # how many connections to accept
     maxsize = 28
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -60,6 +63,7 @@ def droneCommServer(ip):
             code = struct.unpack('i',connection.recv(4))[0]
             print('------ code : '+ str(code))
             if code == swarmNet.requestStatusCode:
+                tStatus = 0
                 data = struct.pack('ii', swarmNet.sendStatusCode,state)
                 try:
                     connection.sendall(data)
@@ -112,30 +116,7 @@ def droneCommServer(ip):
 
 
 
-def brainStatus(IP):
-    global state
-    tSleep = 10
 
-    while running:
-        print('--- Check Brain Connectivity')
-        time.sleep(tSleep)
-        try:
-            lobotomyState = swarmNet.requestStatus(IP)
-            print('not lobotomy ? '+str(lobotomyState))
-            if not lobotomyState:
-                print('lobotomy !!! ')
-                try:
-                    droneController.emergency()
-                except:
-                    droneController.emergencyLanding()
-                state = 1
-
-        except:
-            print('lobotomy !!! ')
-            try:
-                droneController.emergency()
-            except:
-                droneController.emergencyLanding()
             
 
 
@@ -160,6 +141,7 @@ def main():
     global droneController
     global droneConnected
     global started
+    global tStatus
     t0 = time.time()
     time.sleep(30)
     ti=t0
@@ -167,9 +149,6 @@ def main():
     #displayStart()
     print('the left brain IP is : '+str(swarmNet.leftBrainIP))
     statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.leftBrainIP,))
-    statusThread.daemon = True
-    statusThread.start()
-    statusThread = threading.Thread(target = brainStatus, args=(swarmNet.rightBrainIP,))
     statusThread.daemon = True
     statusThread.start()
     statusThread = threading.Thread(target = droneControl, args=())
@@ -190,9 +169,19 @@ def main():
     while running:
 
         
-        time.sleep(60)
+        time.sleep(10)
         print('---- waiting for your drones')
-        
+        tStatus = tStatus+10
+        if tStatus>tStatusEmergency:
+            try:
+            
+                print('lobotomy !!! ')
+                droneController.landing()
+
+            except:
+                droneController.emergencyLanding()
+
+            state = 1        
 
 
 
