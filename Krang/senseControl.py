@@ -24,10 +24,29 @@ class senseController():
     step = 0
     checkingStatus = False
     pushedButton = False
+    killState = False
     def greenMat(self):
         for k in range(0,8):
             for j in range(4,8):
                 self.sense.set_pixel(k,j,green)
+
+    def redMat(self):
+        if not self.killState:
+            self.killState = True
+            self.pushedButton = True
+            for k in range(0,8):
+                for j in range(4,8):
+                    self.sense.set_pixel(k,j,red)
+            self.step == -1
+        else:
+            self.killState = False
+            self.pushedButton = False
+            for k in range(0,8):
+                for j in range(4,8):
+                    self.sense.set_pixel(k,j,green)
+            self.step == 0
+
+
 
     def blueMat(self):
         for k in range(0,8):
@@ -64,6 +83,7 @@ class senseController():
 
 
     def pushed_left(self):
+        self.redMat()
         print('left')
 
 
@@ -116,6 +136,8 @@ class senseController():
                 self.step = 0
                 self.greenMat()
             self.pushedButton = False
+        if self.killState:
+            os.system('sudo telinit 0')
 
 
 
