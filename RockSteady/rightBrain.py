@@ -127,10 +127,10 @@ def main():
     ti=t0
     state = 1
     #displayStart()
-    droneId = int(next(open('/home/pi/droneId')))
+    droneId = int(next(open('/home/pi/droneId')))-1
     print('the drone Ip is : '+str(swarmNet.dronesIP[droneId]))
     print('the tight brain IP is : '+str(swarmNet.rightBrainIP))
-    statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.dronesIP[droneID],))
+    statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.dronesIP[droneId],))
     statusThread.daemon = True
     statusThread.start()
     statusThread = threading.Thread(target = swarmNet.giveStatus, args=(swarmNet.rightBrainIP,))
