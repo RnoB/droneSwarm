@@ -5,7 +5,6 @@ import socket
 import swarmNet
 import os
 import math
-import droneSpecs
 import droneControl
 import struct
 
@@ -161,7 +160,7 @@ def main():
     statusThread.daemon = True
     statusThread.start()
     try:
-        eyeProp = np.loadtxt('droneSpecs.csv')
+        eyeProp = np.loadtxt('/home/pi/droneSpecs.csv')
         vision.sectionCrop(eyeProp)
         vision.start()
         started = True

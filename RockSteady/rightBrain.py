@@ -5,7 +5,6 @@ import socket
 import swarmNet
 import os
 import math
-import droneSpecs
 import droneControl
 import struct
 
@@ -119,9 +118,10 @@ def main():
     ti=t0
     state = 1
     #displayStart()
-    print('the drone Ip is : '+str(swarmNet.dronesIP[droneSpecs.droneID]))
+    droneId = int(next(open('/home/pi/droneId')))
+    print('the drone Ip is : '+str(swarmNet.dronesIP[droneId]))
     print('the tight brain IP is : '+str(swarmNet.rightBrainIP))
-    statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.dronesIP[droneSpecs.droneID],))
+    statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.dronesIP[droneID],))
     statusThread.daemon = True
     statusThread.start()
     statusThread = threading.Thread(target = swarmNet.giveStatus, args=(swarmNet.rightBrainIP,))
@@ -135,7 +135,7 @@ def main():
     statusThread.start()
 
     try:
-        eyeProp = np.loadtxt('droneSpecs.csv')
+        eyeProp = np.loadtxt('/home/pi/droneSpecs.csv')
         vision.sectionCrop(eyeProp)
         vision.start()
         started = True
