@@ -176,10 +176,30 @@ class droneController:
     dVu = 0
     dVp = 0
     droneConnected =False
+
+    au = 0
+    ru = 0
+    ap = 0
+    rp = 0
+    um = 0
+    pm = 0
+    v0 = 0
+    a = .1 
+
 #    if len(sys.argv) > 2:
 #        metalog = MetaLog( filename=sys.argv[2] )
 #    if len(sys.argv) > 3 and sys.argv[3] == 'F':
 #        disableAsserts()
+
+    def updateParameters(self,au=.1,ru=-1,ap=.1,rp=-1,um=1,pm=1,v0=1,a=.1):
+        self.au = au
+        self.ru = ru
+        self.ap = ap
+        self.rp = rp
+        self.um = um
+        self.pm = pm
+        self.v0 = v0
+        self.a = a
 
 
     def TakeOff(self):
@@ -198,11 +218,11 @@ class droneController:
 
     def move(self):
         roll = 0
-        pitch = 0
-        yaw = 60
+        pitch = self.um*(self.ru*self.Vu+self.au*self.dVu)
+        yaw = self.pm*(self.rp*self.Vp+self.ap*self.dVp)
         gaz = 0
-        #if self.droneConnected:
-            #drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
+        if self.droneConnected:
+            drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
 
 
     def updateVision(self,Vu,Vp,dVu,dVp):

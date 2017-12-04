@@ -95,6 +95,8 @@ class senseController():
                     print(self.status)
                     if self.status[k] == 2:
                         try:
+                            parameters = np.loadtxt('/home/pi/parameters.csv')
+                            swarmNet.droneComm(swarmNet.dronesIP[k],code = swarmNet.updateParameters[0],dronePort = swarmNet.droneCommRightPort,dataSend = parameters)
                             swarmNet.droneComm(swarmNet.dronesIP[k],code = swarmNet.startCode[0],dronePort = swarmNet.droneCommRightPort)
                         except:
                             pass

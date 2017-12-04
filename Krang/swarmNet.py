@@ -31,6 +31,7 @@ sendStatusCode = 1002
 
 startCode = [2001,2002,2003,2004]
 updateVisionCode = [3001,3002]
+updateParameters = [4001,4002]
 killCode = 99999
 
 running = True
@@ -160,6 +161,13 @@ def droneComm(ip,dronePort = droneCommLeftPort,code = requestStatusCode,dataSend
                 data = struct.pack('i', code)
                 socketClient.sendall(data)
                 data = struct.pack('dddd', dataSend[0],dataSend[1],dataSend[2],dataSend[3])
+                socketClient.sendall(data)
+                dataRec = struct.unpack('i',socketClient.recv(4))
+                status =dataRec[0]
+            if code in updateParameters:
+                data = struct.pack('i', code)
+                socketClient.sendall(data)
+                data = struct.pack('dddddddd', dataSend[0],dataSend[1],dataSend[2],dataSend[3],dataSend[4],dataSend[5],dataSend[6],dataSend[7])
                 socketClient.sendall(data)
                 dataRec = struct.unpack('i',socketClient.recv(4))
                 status =dataRec[0]

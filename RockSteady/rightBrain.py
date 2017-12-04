@@ -72,6 +72,15 @@ def droneCommServer(ip):
                     print('sending did not work :/ but better not break everything')
                 started = False
                 swarmNet.droneComm(swarmNet.leftBrainIP,code = code)
+            if code == swarmNet.updateParameters[0]:
+                dataSend = struct.unpack('dddddddd',connection.recv(64))
+                data = struct.pack('i', code+1)
+                try:
+                    connection.sendall(data)
+                except:
+                    print('sending did not work :/ but better not break everything')
+                started = False
+                swarmNet.droneComm(swarmNet.leftBrainIP,code = code,dataSend=dataSend)
                 
         except:
             pass
