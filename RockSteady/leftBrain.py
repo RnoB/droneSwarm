@@ -124,12 +124,18 @@ def brainStatus(IP):
             print('not lobotomy ? '+str(lobotomyState))
             if not lobotomyState:
                 print('lobotomy !!! ')
-                droneController.emergencyLanding()
+                try:
+                    droneController.emergency()
+                except:
+                    droneController.emergencyLanding()
                 state = 1
 
         except:
             print('lobotomy !!! ')
-            droneController.emergencyLanding()
+            try:
+                droneController.emergency()
+            except:
+                droneController.emergencyLanding()
             
 
 
