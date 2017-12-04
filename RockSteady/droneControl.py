@@ -48,8 +48,8 @@ class visionAnalyzer(PiRGBAnalysis):
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
         frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
         ret,thres = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY)
-        #ret,thres2 = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY_INV)
-        #thres = cv2.multiply(thres,thres2)
+        ret,thres2 = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY_INV)
+        thres = cv2.multiply(thres,thres2)
         #kernel = np.ones((5,5),np.uint8)
         #thres = cv2.erode(thres,kernel,iterations = 1)
         #thres = cv2.dilate(thres,kernel,iterations = 3)
@@ -61,14 +61,19 @@ class visionAnalyzer(PiRGBAnalysis):
             if len(contour)>20:
                 contX = ((contour[:,0,0]-self.xCrop[-1])/(self.xCrop[-1]))
                 contY = ((contour[:,0,1]-self.xCrop[5])/(self.xCrop[-1]))
-                phi = np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2))))
+                phi = np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2))))-math.pi/2
                 theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
                 phiMax = np.max(phi)
                 phiMin = np.min(phi)
                 self.duV = self.duV + (math.sin(phiMax)-math.sin(phiMin))
                 self.dpV = self.dpV - (math.cos(phiMax)-math.cos(phiMin))
-                self.dudV = self.dudV + (math.sin(phiMax)+math.sin(phiMin))
-                self.dpdV = self.dpdV + (math.cos(phiMax)+math.cos(phiMin))
+                if phiMin>-.95*math.pi:
+                    self.dudV = self.dudV + (math.sin(phiMin))
+                    self.dpdV = self.dpdV + (math.cos(phiMin))
+                if phiMax<-.05*math.pi:
+                    self.dudV = self.dudV + (math.sin(phiMax))
+                    self.dpdV = self.dpdV + (math.cos(phiMax))
+
 
             
         #cv2.imwrite('./imTest/image'+str(self.i)+'.jpg',frameC)
