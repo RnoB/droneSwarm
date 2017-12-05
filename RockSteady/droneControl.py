@@ -24,7 +24,7 @@ def generateSinFunction(xCrop):
     Y=Y[-xCrop[2]:-xCrop[2]+976,:]
 
     if np.shape(Y)[0]<976:
-        Y2=np.zeros((np.shape(X)[0]-np.shape(X)[0],np.shape(X)[1]))
+        Y2=np.zeros((np.shape(X)[0]-np.shape(Y)[0],np.shape(X)[1]))
         Y=np.concatenate((Y2,Y),axis = 0)
 
     print(np.shape(X))
