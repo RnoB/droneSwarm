@@ -19,7 +19,7 @@ def generateSinFunction(xCrop):
     
     X=np.tile(x,(976,1))
 
-    Y=np.tile(x,(xCrop[-1]*2,1))
+    Y=np.tile(x,(xCrop[-1]*2+976,1))
     Y=Y.T
     Y=Y[-xCrop[2]:-xCrop[2]+976,:]
     print(np.shape(X))
