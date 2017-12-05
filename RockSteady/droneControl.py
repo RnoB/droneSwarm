@@ -64,7 +64,7 @@ class visionAnalyzer(PiRGBAnalysis):
     
     i=0
     thresholdRed = 50
-    thresholdBlue = 100
+    thresholdBlue = 255
 
     xCrop = []
     t0 = 0
@@ -85,11 +85,11 @@ class visionAnalyzer(PiRGBAnalysis):
     def __init__(self,camera,sectionCrop):
         super(visionAnalyzer,self).__init__(camera)
         self.xCrop = sectionCrop
-        self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
+        #self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
         print('generateSinFunction')
         self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction(self.xCrop)
         print('generatedSinFunction')
-        cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
+        #cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
 
         
 
@@ -156,8 +156,8 @@ class visionAnalyzer(PiRGBAnalysis):
         #t1=time.time()
         #print('numpy integration  : '+str(t1-t0))
         #t0=time.time()
-        cv2.imwrite('/home/pi/imTest/front'+str(self.i)+'.jpg',self.VcoscosA*maskRB)
-        cv2.imwrite('/home/pi/imTest/side'+str(self.i)+'.jpg',self.VcossinA*maskRB)
+        cv2.imwrite('/home/pi/imTest/front'+str(self.i)+'.jpg',maskRB)
+        cv2.imwrite('/home/pi/imTest/side'+str(self.i)+'.jpg',maskdRB)
         cv2.imwrite('/home/pi/imTest/image'+str(self.i)+'.jpg',frameC)
         #print('image'+str(self.i)+'.jpg')
         self.i=self.i+1
