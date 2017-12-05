@@ -25,16 +25,25 @@ def generateSinFunction(xCrop):
     
     print('More Generation')
     R=np.power(X,2)+np.power(Y,2);
+    print('More Generation')
     circle = R<.99
+    print('More Generation1')
     R[R>1]=0
+    print('More Generation2')
     phi = 1.2*(np.arctan2(X,1-R))-math.pi/2
+    print('More Generation3')
     theta = np.arctan2(Y,np.sqrt(1-np.power(Y,2)))
+    print('More Generation4')
     dPhi = (np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1))/2.0
+    print('More Generation5')
     #dPhi = dPhi*circle
     dTheta = (np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0))/2.0
+    print('More Generation6')
     dTheta = circle*(dTheta*(dTheta>0))
+    print('More Generation7')
     dPhi = dPhi*circle
-    
+    print('More Generation8')
+    circularMask = R<1
 
     print('Almost there')
     Vcoscos = np.cos(phi)*np.cos(theta)*circle
@@ -48,7 +57,7 @@ def generateSinFunction(xCrop):
     VsinR = Vsin*np.power(dPhi,1)*dTheta
     print('done')
 
-    return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR
+    return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
 
 
 class visionAnalyzer(PiRGBAnalysis):
