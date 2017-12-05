@@ -95,10 +95,7 @@ class visionAnalyzer(PiRGBAnalysis):
 
     def analyze(self,frame):
 
-        self.duV = 0
-        self.dudV = 0
-        self.dpV = 0
-        self.dpdV = 0
+
         #self.threshold=self.threshold+1
         #if self.threshold>200:
         #    self.threshold = 0
@@ -155,7 +152,7 @@ class visionAnalyzer(PiRGBAnalysis):
         self.dudV = np.sum(self.VcoscosR[maskdRB])
         self.dpV = np.sum(self.VcossinA[maskRB])
         self.dpdV = np.sum(self.VcossinR[maskdRB])
-        print('vision from frame : '+str((self.duV,self.dudV,self.dpV,self.dpV)))
+        print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
         #t1=time.time()
         #print('numpy integration  : '+str(t1-t0))
         #t0=time.time()
