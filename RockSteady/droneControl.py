@@ -54,7 +54,7 @@ def generateSinFunction(xCrop):
     
     
     im = np.array(phi * 255, dtype = np.uint8)
-    cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',phi)
+    cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',im)
     return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
 
 
