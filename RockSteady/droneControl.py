@@ -13,7 +13,7 @@ from core.bebop import *
 
 def generateSinFunction(xCrop):
 
-    print('Start Generation')
+
     print(xCrop)
     x=np.linspace(-1,1,xCrop[-1]*2);
     
@@ -27,8 +27,7 @@ def generateSinFunction(xCrop):
         Y2=np.zeros((np.shape(X)[0]-np.shape(Y)[0],np.shape(X)[1]))
         Y=np.concatenate((Y2,Y),axis = 0)
 
-    print(np.shape(X))
-    print(np.shape(Y))
+
     
     
 
@@ -105,7 +104,6 @@ class visionAnalyzer(PiRGBAnalysis):
         #if self.threshold>200:
         #    self.threshold = 0
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
-        print(np.shape(frameC))
         frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
         t0=time.time()
         ret,thres = cv2.threshold(frameC[:,:,2],self.thresholdRed,255,cv2.THRESH_BINARY)
@@ -116,6 +114,8 @@ class visionAnalyzer(PiRGBAnalysis):
         t0=time.time()
         redMask = frameC[:,:,2]>self.thresholdRed
         blueMask = frameC[:,:,0]<self.thresholdBlue
+        print(redMask)
+        print(blueMask)
         maskRB = redMask*blueMask
         maskdRB = (np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))*self.circle
         t1=time.time()
