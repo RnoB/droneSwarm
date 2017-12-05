@@ -65,7 +65,7 @@ class visionAnalyzer(PiRGBAnalysis):
     dpdV = 0
     
     i=0
-    thresholdRed = 50
+    thresholdRed = 20
     thresholdBlue = 200
 
     xCrop = []
