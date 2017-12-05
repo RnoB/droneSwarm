@@ -115,8 +115,8 @@ class visionAnalyzer(PiRGBAnalysis):
         redMask = frameC[:,:,2]>self.thresholdRed
         blueMask = frameC[:,:,0]<self.thresholdBlue
 
-        maskRB = redMask*blueMask
-        maskdRB = (np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))*self.circle
+        maskRB = np.array(redMask*blueMask)
+        maskdRB = np.array((np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))*self.circle)
         t1=time.time()
         print('numpy thresholding : '+str(t1-t0))
         #kernel = np.ones((5,5),np.uint8)
