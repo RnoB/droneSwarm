@@ -53,7 +53,7 @@ def generateSinFunction(xCrop):
     VsinR = Vsin*np.power(dPhi,1)*dTheta*dPhi
     cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',Vcoscos)
     cv2.imwrite('/home/pi/imTest/Vsinsin.jpg',Vsinsin)
-        
+    print('dPhi : '+str(dPhi))
     
 
     return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
