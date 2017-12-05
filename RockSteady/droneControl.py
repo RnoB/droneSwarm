@@ -104,6 +104,7 @@ class visionAnalyzer(PiRGBAnalysis):
         #self.threshold=self.threshold+1
         #if self.threshold>200:
         #    self.threshold = 0
+        print(np.shape(frameC))
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
         frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
         t0=time.time()
