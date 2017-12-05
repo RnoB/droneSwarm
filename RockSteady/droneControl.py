@@ -115,7 +115,7 @@ class visionAnalyzer(PiRGBAnalysis):
         blueMask = frameC[:,:,0]<self.thresholdBlue
 
         maskRB = np.array(redMask*blueMask)
-        maskdRB = np.array((np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))*self.circle)
+        maskdRB = np.array((np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1)))
         t1=time.time()
         print('numpy thresholding  : '+str(t1-t0))
         #kernel = np.ones((5,5),np.uint8)
@@ -146,14 +146,6 @@ class visionAnalyzer(PiRGBAnalysis):
 
         t1=time.time()
         print('opencv integration : '+str(t1-t0))
-        t0=time.time()
-        thres = np.array(thres)
-        self.duV = np.sum(cv2.multiply(self.VcoscosA,thres))
-        self.dudV = np.sum(cv2.multiply(self.VcossinR,thres))
-        self.dpV = np.sum(cv2.multiply(self.VcossinA,thres))
-        self.dpdV = np.sum(cv2.multiply(self.VcossinR,thres))
-        t1=time.time()
-        print('openc2 integration  : '+str(t1-t0))
         
         t0=time.time()
         self.duV = np.sum(self.VcoscosA[maskRB])
