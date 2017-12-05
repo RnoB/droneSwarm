@@ -45,12 +45,12 @@ def generateSinFunction(xCrop):
     Vcoscos = np.cos(phi)*np.cos(theta)*circle
     Vcossin = np.sin(phi)*np.cos(theta)*circle
     Vsin = np.sin(theta)*circle
-    VcoscosA = np.array(Vcoscos*dTheta*dPhi)
-    VcoscosR = np.array(Vcoscos*dTheta)
-    VcossinA = np.array(Vcossin*dTheta*dPhi)
-    VcossinR = np.array(Vcossin*dTheta)
-    VsinA = Vsin*np.power(dPhi,2)*dTheta*dPhi
-    VsinR = Vsin*np.power(dPhi,1)*dTheta
+    VcoscosA = np.array(Vcoscos*dTheta)
+    VcoscosR = np.array(Vcoscos*dTheta*dPhi)
+    VcossinA = np.array(Vcossin*dTheta)
+    VcossinR = np.array(Vcossin*dTheta*dPhi)
+    VsinA = Vsin*np.power(dPhi,2)*dTheta
+    VsinR = Vsin*np.power(dPhi,1)*dTheta*dPhi
     
 
     return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
@@ -147,10 +147,10 @@ class visionAnalyzer(PiRGBAnalysis):
         t1=time.time()
         print('opencv integration : '+str(t1-t0))
         t0=time.time()
-        self.duV = np.sum(self.VcoscosA[thres])
-        self.dudV = np.sum(self.VcoscosR[thres])
-        self.dpV = np.sum(self.VcossinA[thres])
-        self.dpdV = np.sum(self.VcossinR[thres])
+        self.duV = np.sum(cv2.multiply(self.VcoscosA,thres))
+        self.dudV = np.sum(cv2.multiply(self.VcossinR,thres))
+        self.dpV = np.sum(cv2.multiply(self.VcossinA,thres))
+        self.dpdV = np.sum(cv2.multiply(self.VcossinR,thres))
         t1=time.time()
         print('openc2 integration  : '+str(t1-t0))
         
