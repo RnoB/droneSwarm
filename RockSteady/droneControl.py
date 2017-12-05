@@ -41,7 +41,7 @@ def generateSinFunction(xCrop):
     dTheta = circle*(dTheta*(dTheta>0))
     dPhi = dPhi*circle
     circularMask = R<.98
-
+    print(phi)
     Vcoscos = np.cos(phi)*np.cos(theta)*circle
     Vcossin = np.sin(phi)*np.cos(theta)*circle
     Vsin = np.sin(theta)*circle
@@ -52,7 +52,7 @@ def generateSinFunction(xCrop):
     VsinA = Vsin*np.power(dPhi,2)*dTheta*circularMask
     VsinR = Vsin*np.power(dPhi,1)*dTheta*dPhi
     
-    print('dPhi : '+str(dPhi))
+    
     im = np.array(Vcoscos+1 * 128, dtype = np.uint8)
     cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',im)
     return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
