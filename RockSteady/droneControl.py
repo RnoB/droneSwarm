@@ -52,7 +52,8 @@ def generateSinFunction(xCrop):
     VsinA = Vsin*np.power(dPhi,2)*dTheta*circularMask
     VsinR = Vsin*np.power(dPhi,1)*dTheta*dPhi
     
-
+    print('dPhi : '+str(dPhi))
+    
     return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
 
 
