@@ -149,10 +149,10 @@ class visionAnalyzer(PiRGBAnalysis):
         
         t0=time.time()
 
-        self.duV = (self.VcoscosA[maskRB])
-        self.dudV = (self.VcoscosR[maskdRB])
-        self.dpV = (self.VcossinA[maskRB])
-        self.dpdV = (self.VcossinR[maskdRB])
+        self.duV = np.sum(self.VcoscosA[maskRB])
+        self.dudV = np.sum(self.VcoscosR[maskdRB])
+        self.dpV = np.sum(self.VcossinA[maskRB])
+        self.dpdV = np.sum(self.VcossinR[maskdRB])
         t1=time.time()
         print('numpy integration  : '+str(t1-t0))
         t0=time.time()
