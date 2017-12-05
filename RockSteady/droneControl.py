@@ -104,8 +104,8 @@ class visionAnalyzer(PiRGBAnalysis):
         #self.threshold=self.threshold+1
         #if self.threshold>200:
         #    self.threshold = 0
-        print(np.shape(frameC))
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
+        print(np.shape(frameC))
         frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
         t0=time.time()
         ret,thres = cv2.threshold(frameC[:,:,2],self.thresholdRed,255,cv2.THRESH_BINARY)
@@ -115,7 +115,7 @@ class visionAnalyzer(PiRGBAnalysis):
         print('opencv thresholding : '+str(t1-t0))
         t0=time.time()
         redMask = frameC[:,:,2]>self.thresholdRed
-        blueMask = frameC[:,:,2]<self.thresholdBlue
+        blueMask = frameC[:,:,0]<self.thresholdBlue
         maskRB = redMask*blueMask
         maskdRB = (np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))*self.circle
         t1=time.time()
