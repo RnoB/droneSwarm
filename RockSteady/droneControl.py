@@ -21,11 +21,12 @@ def generateSinFunction(xCrop):
     Y=np.tile(x,(xCrop[-1]*2,1))
     Y=Y.T
     Y=Y[xCrop[-1]-xCrop[5]:xCrop[-1]-xCrop[5]+976,:]
-
+    print(np.shape(X))
+    print(np.shape(Y))
     
     print('More Generation')
     
-    
+
     R=np.power(X,2)+np.power(Y,2)
     print('More Generation')
     circle = R<.99
