@@ -59,8 +59,8 @@ class visionAnalyzer(PiRGBAnalysis):
 
         for contour in contours:
             if len(contour)>20:
-                contX = ((contour[:,0,0]-self.xCrop[-1])/(self.xCrop[-1]))
-                contY = ((contour[:,0,1]-self.xCrop[5])/(self.xCrop[-1]))
+                contX = ((contour[:,0,0]-self.xCrop[-1])/float(self.xCrop[-1]))
+                contY = ((contour[:,0,1]-self.xCrop[5])/float(self.xCrop[-1]))
                 phi = np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2))))-math.pi/2
                 theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
                 phiMax = np.max(phi)
