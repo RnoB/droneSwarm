@@ -1,7 +1,5 @@
 import time
 import picamera
-import cv2
-import numpy as np
 with picamera.PiCamera() as camera:
     camera.resolution = (1296,976)
     #camera.zoom = ( .3563 , 0.2875 , 228/640 , 228/480 )
@@ -31,19 +29,14 @@ with picamera.PiCamera() as camera:
                 camera.awb_gains=(r,b)
                 firstRound = False
             if not firstRound:
-                r=r+.5
+                r=r+1
                 if r>8:
                     r=0
-                    b=b+.5
+                    b=b+1
                 if b>8:
                     break
                 camera.awb_gains=(r,b)
-                thershold=150
-            ret,thres = cv2.threshold(i[:,:,0],threshold,255,cv2.THRESH_BINARY)
-            ret,thres2 = cv2.threshold(i[:,:,2],threshold,255,cv2.THRESH_BINARY_INV)
-            thres = cv2.multiply(thres,thres2)
-            cv2.imwrite(filename+'_thres.jpg',thres)
-            print('White balance gain : '+str(camera.awb_gains))
+                print('White balance gain : '+str(camera.awb_gains))
             #time.sleep(.1)
             if i == 400:
                 break
