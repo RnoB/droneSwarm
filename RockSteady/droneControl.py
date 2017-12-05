@@ -41,7 +41,7 @@ def generateSinFunction(xCrop):
     dTheta = circle*(dTheta*(dTheta>0))
     dPhi = dPhi*circle
     circularMask = R<.98
-    print(phi)
+ 
     Vcoscos = np.cos(phi)*np.cos(theta)*circle
     Vcossin = np.sin(phi)*np.cos(theta)*circle
     Vsin = np.sin(theta)*circle
@@ -66,7 +66,7 @@ class visionAnalyzer(PiRGBAnalysis):
     
     i=0
     thresholdRed = 50
-    thresholdBlue = 255
+    thresholdBlue = 100
 
     xCrop = []
     t0 = 0
