@@ -21,7 +21,8 @@ class visionAnalyzer(PiRGBAnalysis):
     dpdV = 0
     
     i=0
-    threshold = 150
+    thresholdRed = 50
+    thresholdBlue = 50
 
     xCrop = []
     t0 = 0
@@ -47,9 +48,18 @@ class visionAnalyzer(PiRGBAnalysis):
         #    self.threshold = 0
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
         frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
-        ret,thres = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY)
-        ret,thres2 = cv2.threshold(frameC[:,:,0],self.threshold,255,cv2.THRESH_BINARY_INV)
+        t0=time.time()
+        ret,thres = cv2.threshold(frameC[:,:,2],self.thresholdRed,255,cv2.THRESH_BINARY)
+        ret,thres2 = cv2.threshold(frameC[:,:,0],self.thresholdBlue,255,cv2.THRESH_BINARY_INV)
         thres = cv2.multiply(thres,thres2)
+        t1=time.time()
+        print('opencv thresholding : '+str(t1-t0))
+        t0=t1
+        redMask = frameC[:,:,2]>self.thresholdRed
+        blueMask = frameC[:,:,2]<self.thresholdBlue
+        maskRB = redMask*blueMask
+        t1=time.time()
+        print('numpy thresholding : '+str(t1-t0))
         #kernel = np.ones((5,5),np.uint8)
         #thres = cv2.erode(thres,kernel,iterations = 1)
         #thres = cv2.dilate(thres,kernel,iterations = 3)
@@ -116,7 +126,7 @@ class vision:
             camera.iso = 800
             camera.shutter_speed = 100000
             camera.awb_mode = 'off'
-            camera.awb_gains=(8,8)
+            camera.awb_gains=(8,2)
             #camera.exposure_speed = 100
             #camera.exposure_mode = 'night'
             camera.exposure_compensation = 25
