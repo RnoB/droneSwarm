@@ -13,7 +13,7 @@ from core.bebop import *
 
 def generateSinFunction(xCrop):
 
-
+    print('Start Generation')
     x=np.linspace(-1,1,xCrop[-1]*2);
     
     X=np.tile(x,(976,1))
@@ -23,6 +23,7 @@ def generateSinFunction(xCrop):
     Y=Y[xCrop[-1]-xCrop[5]:xCrop[-1]-xCrop[5]+976,:]
 
     
+    print('More Generation')
     R=np.power(X,2)+np.power(Y,2);
     circle = R<.99
     R[R>1]=0
@@ -35,6 +36,7 @@ def generateSinFunction(xCrop):
     dPhi = dPhi*circle
     
 
+    print('Almost there')
     Vcoscos = np.cos(phi)*np.cos(theta)*circle
     Vcossin = np.sin(phi)*np.cos(theta)*circle
     Vsin = np.sin(theta)*circle
@@ -44,6 +46,7 @@ def generateSinFunction(xCrop):
     VcossinR = Vcossin*dTheta
     VsinA = Vsin*np.power(dPhi,2)*dTheta*dPhi
     VsinR = Vsin*np.power(dPhi,1)*dTheta
+    print('done')
 
     return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR
 
