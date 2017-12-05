@@ -87,11 +87,11 @@ class visionAnalyzer(PiRGBAnalysis):
     def __init__(self,camera,sectionCrop):
         super(visionAnalyzer,self).__init__(camera)
         self.xCrop = sectionCrop
-        #self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
+        self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
         print('generateSinFunction')
         self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction(self.xCrop)
         print('generatedSinFunction')
-        #cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
+        cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
 
         
 
@@ -111,11 +111,18 @@ class visionAnalyzer(PiRGBAnalysis):
             t1=time.time()
             print('opencv thresholding : '+str(t1-t0))
             t0=time.time()
-        redMask = frameC[:,:,2]>self.thresholdRed
-        blueMask = frameC[:,:,0]<self.thresholdBlue
+        frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
+        ORANGE_MIN = np.array([0, 50, 50],np.uint8)
+        ORANGE_MAX = np.array([25, 255, 255],np.uint8)
 
-        maskRB = np.array(redMask*blueMask)
-        maskdRB = (np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))
+        hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
+
+        thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
+        #redMask = frameC[:,:,2]>self.thresholdRed
+        #blueMask = frameC[:,:,0]<self.thresholdBlue
+
+        maskRB = np.array(thres)
+        maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
         #t1=time.time()
         #print('numpy thresholding  : '+str(t1-t0))
         #kernel = np.ones((5,5),np.uint8)
