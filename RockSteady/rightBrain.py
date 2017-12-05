@@ -110,7 +110,7 @@ def brainStatus(IP):
 def droneControl():
     
     global started
-    tSleep = 10
+    tSleep = .3
     while running:
         time.sleep(tSleep)
         if started:
