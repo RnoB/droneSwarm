@@ -147,6 +147,7 @@ class visionAnalyzer(PiRGBAnalysis):
         t1=time.time()
         print('opencv integration : '+str(t1-t0))
         t0=time.time()
+        thres = np.array(thres)
         self.duV = np.sum(cv2.multiply(self.VcoscosA,thres))
         self.dudV = np.sum(cv2.multiply(self.VcossinR,thres))
         self.dpV = np.sum(cv2.multiply(self.VcossinA,thres))
