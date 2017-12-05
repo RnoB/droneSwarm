@@ -53,8 +53,8 @@ def generateSinFunction(xCrop):
     VsinR = Vsin*np.power(dPhi,1)*dTheta*dPhi
     
     
-    im = np.array(Vcoscos * 255, dtype = np.uint8)
-    cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',im)
+    #im = np.array(Vcoscos * 255, dtype = np.uint8)
+    #cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',im)
     return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
 
 
@@ -118,7 +118,7 @@ class visionAnalyzer(PiRGBAnalysis):
         hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
 
         thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
-        print(thres)
+        
         #redMask = frameC[:,:,2]>self.thresholdRed
         #blueMask = frameC[:,:,0]<self.thresholdBlue
 
@@ -160,10 +160,10 @@ class visionAnalyzer(PiRGBAnalysis):
         
         #t0=time.time()
 
-        self.duV = np.sum(cv2.multiply(self.VcoscosA,thres))
-        self.dudV = np.sum(self.VcoscosR[maskdRB])
-        self.dpV = np.sum(self.VcossinA[maskRB])
-        self.dpdV = np.sum(self.VcossinR[maskdRB])
+        #self.duV = np.sum(cv2.multiply(self.VcoscosA,thres))
+        #self.dudV = np.sum(self.VcoscosR[maskdRB])
+        #self.dpV = np.sum(self.VcossinA[maskRB])
+        #self.dpdV = np.sum(self.VcossinR[maskdRB])
         #print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
         #t1=time.time()
         #print('numpy integration  : '+str(t1-t0))
