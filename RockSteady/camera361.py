@@ -1,5 +1,7 @@
 import time
 import picamera
+import cv2
+import numpy as np
 with picamera.PiCamera() as camera:
     camera.resolution = (1296,976)
     #camera.zoom = ( .3563 , 0.2875 , 228/640 , 228/480 )
@@ -15,6 +17,7 @@ with picamera.PiCamera() as camera:
     firstRound = True
     try:
         for i, filename in enumerate(camera.capture_continuous('/home/pi/imTest/image{counter:04d}.jpg', use_video_port=True)):
+            
             print(filename)
             print('analog gain : '+str(camera.analog_gain)+' digital_gain : '+str(camera.digital_gain))
 
@@ -35,7 +38,11 @@ with picamera.PiCamera() as camera:
                 if b>8:
                     break
                 camera.awb_gains=(r,b)
-
+                thershold=150
+            ret,thres = cv2.threshold(frameC[:,:,2],threshold,255,cv2.THRESH_BINARY)
+            ret,thres2 = cv2.threshold(frameC[:,:,0],threshold,255,cv2.THRESH_BINARY_INV)
+            thres = cv2.multiply(thres,thres2)
+            cv2.imwrite(filename+'_thres.jpg',thres)
             print('White balance gain : '+str(camera.awb_gains))
             #time.sleep(.1)
             if i == 400:
