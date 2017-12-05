@@ -28,11 +28,54 @@ class visionAnalyzer(PiRGBAnalysis):
     t0 = 0
     fov = 220.0/180.0
     circularMask = []
+    VcoscosA = []
+    VcossinA = []
+    VsinA = []
+    VcoscosR = []
+    VcossinR = []
+    VsinR = []
+    circle = []
+
+    def generateSinFunction(self):
+
+
+        x=np.linspace(-1,1,self.xCrop[-1]*2);
+        
+        X=np.tile(x,(976,1))
+
+        Y=np.tile(x,(self.xCrop[-1]*2,1))
+        Y=Y.T
+        Y=Y[self.xCrop[-1]-self.xCrop[5]:self.xCrop[-1]-self.xCrop[5]+976,:]
+
+        
+        R=np.power(X,2)+np.power(Y,2);
+        self.circle = R<.99
+        R[R>1]=0
+        phi = self.fov*(np.arctan2(X,1-R))-math.pi/2
+        theta = np.arctan2(Y,np.sqrt(1-np.power(Y,2)))
+        dPhi = (np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1))/2.0
+        dTheta = (np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0))/2.0
+        dTheta = circle*(dTheta*(dTheta>0))
+        dPhi = dPhi*circle
+        R[R<1]=1
+
+        Vcoscos = np.cos(phi)*np.cos(theta)*circle
+        Vcossin = np.sin(phi)*np.cos(theta)*circle
+        Vsin = np.sin(theta)*circle
+        self.VcoscosA = Vcoscos*dTheta*dPhi
+        self.VcoscosR = Vcoscos*dTheta
+        self.VcossinA = Vcossin*dTheta*dPhi
+        self.VcossinR = Vcossin*dTheta
+        self.VsinA = Vsin*np.power(dPhi,2)*dTheta*dPhi
+        self.VsinR = Vsin*np.power(dPhi,1)*dTheta
+        
+
+
     def __init__(self,camera,sectionCrop):
         super(visionAnalyzer,self).__init__(camera)
         self.xCrop = sectionCrop
         self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
-       
+        self.generateSinFunction()
         cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
 
         
@@ -58,11 +101,13 @@ class visionAnalyzer(PiRGBAnalysis):
         redMask = frameC[:,:,2]>self.thresholdRed
         blueMask = frameC[:,:,2]<self.thresholdBlue
         maskRB = redMask*blueMask
+        maskdRB = (np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))*self.circle
         t1=time.time()
         print('numpy thresholding : '+str(t1-t0))
         #kernel = np.ones((5,5),np.uint8)
         #thres = cv2.erode(thres,kernel,iterations = 1)
         #thres = cv2.dilate(thres,kernel,iterations = 3)
+        t0=time.time()
         im2,contours,hierarchy = cv2.findContours(thres ,cv2.RETR_LIST ,cv2.CHAIN_APPROX_SIMPLE)
         #cv2.drawContours(thres,contours,-1,(0,0,255),2)
 
@@ -85,7 +130,16 @@ class visionAnalyzer(PiRGBAnalysis):
                     self.dpdV = self.dpdV + (math.sin(phiMax))
 
 
-            
+        t1=time.time()
+        print('opencv integration : '+str(t1-t0))
+        t0=time.time()
+        self.duV = np.sum(self.VcoscosA[maskRB])
+        self.dudV = np.sum(self.VcoscosR[maskdRB])
+        self.dpV = np.sum(self.VcossinA[maskRB])
+        self.dpdV = np.sum(self.VcossinR[maskdRB])
+        t1=time.time()
+        print('numpy integration : '+str(t1-t0))
+        t0=time.time()
         #cv2.imwrite('./imTest/image'+str(self.i)+'.jpg',frameC)
         #cv2.imwrite('./imTest/thres'+str(self.i)+'.jpg',thres)
         #print('image'+str(self.i)+'.jpg')
