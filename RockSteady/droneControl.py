@@ -11,7 +11,41 @@ import sys
 
 from core.bebop import *
 
+def generateSinFunction(xCrop):
 
+
+    x=np.linspace(-1,1,xCrop[-1]*2);
+    
+    X=np.tile(x,(976,1))
+
+    Y=np.tile(x,(xCrop[-1]*2,1))
+    Y=Y.T
+    Y=Y[xCrop[-1]-xCrop[5]:xCrop[-1]-xCrop[5]+976,:]
+
+    
+    R=np.power(X,2)+np.power(Y,2);
+    circle = R<.99
+    R[R>1]=0
+    phi = 1.2*(np.arctan2(X,1-R))-math.pi/2
+    theta = np.arctan2(Y,np.sqrt(1-np.power(Y,2)))
+    dPhi = (np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1))/2.0
+    #dPhi = dPhi*circle
+    dTheta = (np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0))/2.0
+    dTheta = circle*(dTheta*(dTheta>0))
+    dPhi = dPhi*circle
+    
+
+    Vcoscos = np.cos(phi)*np.cos(theta)*circle
+    Vcossin = np.sin(phi)*np.cos(theta)*circle
+    Vsin = np.sin(theta)*circle
+    VcoscosA = Vcoscos*dTheta*dPhi
+    VcoscosR = Vcoscos*dTheta
+    VcossinA = Vcossin*dTheta*dPhi
+    VcossinR = Vcossin*dTheta
+    VsinA = Vsin*np.power(dPhi,2)*dTheta*dPhi
+    VsinR = Vsin*np.power(dPhi,1)*dTheta
+
+    return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR
 
 
 class visionAnalyzer(PiRGBAnalysis):
@@ -36,38 +70,7 @@ class visionAnalyzer(PiRGBAnalysis):
     VsinR = []
     circle = []
 
-    def generateSinFunction(self):
 
-
-        x=np.linspace(-1,1,self.xCrop[-1]*2);
-        
-        X=np.tile(x,(976,1))
-
-        Y=np.tile(x,(self.xCrop[-1]*2,1))
-        Y=Y.T
-        Y=Y[self.xCrop[-1]-self.xCrop[5]:self.xCrop[-1]-self.xCrop[5]+976,:]
-
-        
-        R=np.power(X,2)+np.power(Y,2);
-        self.circle = R<.99
-        R[R>1]=0
-        phi = self.fov*(np.arctan2(X,1-R))-math.pi/2
-        theta = np.arctan2(Y,np.sqrt(1-np.power(Y,2)))
-        dPhi = (np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1))/2.0
-        dTheta = (np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0))/2.0
-        dTheta = circle*(dTheta*(dTheta>0))
-        dPhi = dPhi*circle
-        R[R<1]=1
-
-        Vcoscos = np.cos(phi)*np.cos(theta)*circle
-        Vcossin = np.sin(phi)*np.cos(theta)*circle
-        Vsin = np.sin(theta)*circle
-        self.VcoscosA = Vcoscos*dTheta*dPhi
-        self.VcoscosR = Vcoscos*dTheta
-        self.VcossinA = Vcossin*dTheta*dPhi
-        self.VcossinR = Vcossin*dTheta
-        self.VsinA = Vsin*np.power(dPhi,2)*dTheta*dPhi
-        self.VsinR = Vsin*np.power(dPhi,1)*dTheta
         
 
 
@@ -75,7 +78,9 @@ class visionAnalyzer(PiRGBAnalysis):
         super(visionAnalyzer,self).__init__(camera)
         self.xCrop = sectionCrop
         self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
-        self.generateSinFunction()
+        print('generateSinFunction')
+        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR=generateSinFunction(self.xCrop)
+        print('generatedSinFunction')
         cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
 
         
