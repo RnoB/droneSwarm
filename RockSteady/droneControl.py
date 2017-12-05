@@ -88,7 +88,7 @@ class visionAnalyzer(PiRGBAnalysis):
         self.xCrop = sectionCrop
         self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
         print('generateSinFunction')
-        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,mask=generateSinFunction(self.xCrop)
+        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction(self.xCrop)
         print('generatedSinFunction')
         cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
 
@@ -114,8 +114,7 @@ class visionAnalyzer(PiRGBAnalysis):
         t0=time.time()
         redMask = frameC[:,:,2]>self.thresholdRed
         blueMask = frameC[:,:,0]<self.thresholdBlue
-        print(redMask)
-        print(blueMask)
+
         maskRB = redMask*blueMask
         maskdRB = (np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))*self.circle
         t1=time.time()
