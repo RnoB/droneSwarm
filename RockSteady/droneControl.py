@@ -51,9 +51,6 @@ def generateSinFunction(xCrop):
     VcossinR = np.array(Vcossin*dTheta*dPhi)
     VsinA = Vsin*np.power(dPhi,2)*dTheta*circularMask
     VsinR = Vsin*np.power(dPhi,1)*dTheta*dPhi
-    #cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',Vcoscos)
-    #cv2.imwrite('/home/pi/imTest/Vsinsin.jpg',Vsinsin)
-    print('dPhi : '+str(dPhi))
     
 
     return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
@@ -162,7 +159,7 @@ class visionAnalyzer(PiRGBAnalysis):
         A=self.VcoscosA
         cv2.imwrite('/home/pi/imTest/front'+str(self.i)+'.jpg',A*255)
         cv2.imwrite('/home/pi/imTest/side'+str(self.i)+'.jpg',maskRB)
-        
+        frameC[maskRB]=0
         cv2.imwrite('/home/pi/imTest/image'+str(self.i)+'.jpg',frameC)
         #print('image'+str(self.i)+'.jpg')
         self.i=self.i+1
