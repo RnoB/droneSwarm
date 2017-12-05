@@ -54,7 +54,7 @@ class visionAnalyzer(PiRGBAnalysis):
         thres = cv2.multiply(thres,thres2)
         t1=time.time()
         print('opencv thresholding : '+str(t1-t0))
-        t0=t1
+        t0=time.time()
         redMask = frameC[:,:,2]>self.thresholdRed
         blueMask = frameC[:,:,2]<self.thresholdBlue
         maskRB = redMask*blueMask
@@ -71,7 +71,7 @@ class visionAnalyzer(PiRGBAnalysis):
             if len(contour)>20:
                 contX = ((contour[:,0,0]-self.xCrop[-1])/float(self.xCrop[-1]))
                 contY = ((contour[:,0,1]-self.xCrop[5])/float(self.xCrop[-1]))
-                phi = (fov*np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2)))))-math.pi/2
+                phi = (self.fov*np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2)))))-math.pi/2
                 theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
                 phiMax = np.max(phi)
                 phiMin = np.min(phi)
