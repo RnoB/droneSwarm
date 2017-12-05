@@ -156,13 +156,14 @@ class visionAnalyzer(PiRGBAnalysis):
         #t1=time.time()
         #print('numpy integration  : '+str(t1-t0))
         #t0=time.time()
-        #cv2.imwrite('./imTest/image'+str(self.i)+'.jpg',frameC)
-        #cv2.imwrite('./imTest/thres'+str(self.i)+'.jpg',thres)
+        cv2.imwrite('./imTest/front'+str(self.i)+'.jpg',self.VcoscosA*maskRB)
+        cv2.imwrite('./imTest/side'+str(self.i)+'.jpg',tself.VcossinA*maskRB)
+        cv2.imwrite('./imTest/image'+str(self.i)+'.jpg',frameC)
         #print('image'+str(self.i)+'.jpg')
         #self.i=self.i+1
-        #t1=time.time()
-        #print('fps : ' + str(int(1/(t1-self.t0))))
-        #self.t0 = t1
+        t1=time.time()
+        print('fps : ' + str(int(1/(t1-self.t0))))
+        self.t0 = t1
         #print('thres : ' + str(self.threshold))
 
 
