@@ -25,7 +25,7 @@ class visionAnalyzer(PiRGBAnalysis):
 
     xCrop = []
     t0 = 0
-
+    fov = 220.0/180.0
     circularMask = []
     def __init__(self,camera,sectionCrop):
         super(visionAnalyzer,self).__init__(camera)
@@ -61,18 +61,18 @@ class visionAnalyzer(PiRGBAnalysis):
             if len(contour)>20:
                 contX = ((contour[:,0,0]-self.xCrop[-1])/float(self.xCrop[-1]))
                 contY = ((contour[:,0,1]-self.xCrop[5])/float(self.xCrop[-1]))
-                phi = np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2))))-math.pi/2
+                phi = (fov*np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2)))))-math.pi/2
                 theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
                 phiMax = np.max(phi)
                 phiMin = np.min(phi)
                 self.duV = self.duV + (math.sin(phiMax)-math.sin(phiMin))
                 self.dpV = self.dpV - (math.cos(phiMax)-math.cos(phiMin))
                 if phiMin>-.95*math.pi:
-                    self.dudV = self.dudV + (math.sin(phiMin))
-                    self.dpdV = self.dpdV + (math.cos(phiMin))
+                    self.dudV = self.dudV + (math.cos(phiMin))
+                    self.dpdV = self.dpdV + (math.sin(phiMin))
                 if phiMax<-.05*math.pi:
-                    self.dudV = self.dudV + (math.sin(phiMax))
-                    self.dpdV = self.dpdV + (math.cos(phiMax))
+                    self.dudV = self.dudV + (math.cos(phiMax))
+                    self.dpdV = self.dpdV + (math.sin(phiMax))
 
 
             
