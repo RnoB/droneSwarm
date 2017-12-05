@@ -14,7 +14,7 @@ with picamera.PiCamera() as camera:
     camera.start_preview()
     firstRound = True
     try:
-        for i, filename in enumerate(camera.capture_continuous('./imTest/image{counter:04d}.jpg', use_video_port=True)):
+        for i, filename in enumerate(camera.capture_continuous('~/imTest/image{counter:04d}.jpg', use_video_port=True)):
             print(filename)
             print('analog gain : '+str(camera.analog_gain)+' digital_gain : '+str(camera.digital_gain))
 

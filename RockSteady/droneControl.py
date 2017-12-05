@@ -48,7 +48,7 @@ class visionAnalyzer(PiRGBAnalysis):
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
         frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
         ret,thres = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY)
-        ret,thres2 = cv2.threshold(frameC[:,:,2],self.threshold,255,cv2.THRESH_BINARY_INV)
+        ret,thres2 = cv2.threshold(frameC[:,:,0],self.threshold,255,cv2.THRESH_BINARY_INV)
         thres = cv2.multiply(thres,thres2)
         #kernel = np.ones((5,5),np.uint8)
         #thres = cv2.erode(thres,kernel,iterations = 1)
