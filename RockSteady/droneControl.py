@@ -308,6 +308,8 @@ class droneController:
         pitch = self.um*(self.ru*self.Vu+self.au*self.dVu)
         yaw = self.pm*(self.rp*self.Vp+self.ap*self.dVp)
         gaz = 0
+        print('pitch : '+str(pitch))
+        print('pitch : '+str(yaw))
         if self.droneConnected:
             self.drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
 
@@ -317,6 +319,7 @@ class droneController:
         self.Vp = Vp
         self.dVu = dVu
         self.dVp = dVp
+        print('Vision : '+str((self.Vu,Self.Vp,self.dVu,self.dVp)))
 
 
     def start(self):
