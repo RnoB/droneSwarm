@@ -25,7 +25,7 @@ vision = droneControl.vision()
 droneController = droneControl.droneController()
 
 tStatus = 0
-tStatusEmergency = 30
+tStatusEmergency = 15
 
 def droneCommServer(ip):
     print(' - - -- starting the drone center command')
@@ -53,15 +53,15 @@ def droneCommServer(ip):
             time.sleep(20)
     server.listen(1)
     while running:
-        print('--- waiting for a connection')
+        #print('--- waiting for a connection')
         try:
             connection, client_address = server.accept()
-            print('------ Connection coming from ' + str(client_address))
+            #print('------ Connection coming from ' + str(client_address))
 
 
 
             code = struct.unpack('i',connection.recv(4))[0]
-            print('------ code : '+ str(code))
+            #print('------ code : '+ str(code))
             if code == swarmNet.requestStatusCode:
                 tStatus = 0
                 data = struct.pack('ii', swarmNet.sendStatusCode,state)
@@ -90,7 +90,7 @@ def droneCommServer(ip):
                     droneController.emergencylanding()
             if code == swarmNet.updateVisionCode[0]:
                 data= struct.unpack('dddd',connection.recv(32))
-                print('the right world looks like : '+str(data))
+                #print('the right world looks like : '+str(data))
                 VuR = data[0]
                 VpR = data[1]
                 dVuR = data[2]
@@ -169,9 +169,9 @@ def main():
     while running:
 
         
-        time.sleep(10)
+        time.sleep(5)
         print('---- waiting for your drones')
-        tStatus = tStatus+10
+        tStatus = tStatus+5
         if tStatus>tStatusEmergency:
             try:
             

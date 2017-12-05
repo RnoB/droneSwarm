@@ -152,7 +152,7 @@ class visionAnalyzer(PiRGBAnalysis):
         self.dudV = np.sum(self.VcoscosR[maskdRB])
         self.dpV = np.sum(self.VcossinA[maskRB])
         self.dpdV = np.sum(self.VcossinR[maskdRB])
-        print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
+        #print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
         #t1=time.time()
         #print('numpy integration  : '+str(t1-t0))
         #t0=time.time()
@@ -306,8 +306,8 @@ class droneController:
         pitch = self.um*(self.ru*self.Vu+self.au*self.dVu)
         yaw = self.pm*(self.rp*self.Vp+self.ap*self.dVp)
         gaz = 0
-        print('pitch : '+str(pitch))
-        print('yaw  : '+str(yaw))
+        #print('pitch : '+str(pitch))
+        #print('yaw  : '+str(yaw))
         if self.droneConnected:
             self.drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
 
@@ -317,7 +317,7 @@ class droneController:
         self.Vp = Vp
         self.dVu = dVu
         self.dVp = dVp
-        print('Vision : '+str((self.Vu,self.Vp,self.dVu,self.dVp)))
+        #print('Vision : '+str((self.Vu,self.Vp,self.dVu,self.dVp)))
 
 
     def start(self):

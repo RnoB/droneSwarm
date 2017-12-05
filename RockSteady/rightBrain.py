@@ -39,15 +39,15 @@ def droneCommServer(ip):
             time.sleep(5)
     server.listen(1)
     while running:
-        print('--- waiting for a connection')
+        #print('--- waiting for a connection')
         try:
             connection, client_address = server.accept()
-            print('------ Connection coming from ' + str(client_address))
+            #print('------ Connection coming from ' + str(client_address))
 
 
 
             code = struct.unpack('i',connection.recv(4))[0]
-            print('------ code : '+ str(code))
+            #print('------ code : '+ str(code))
             if code == swarmNet.requestStatusCode:
                 print('state : '+str(state))
                 data = struct.pack('ii', swarmNet.sendStatusCode,state)
@@ -90,7 +90,7 @@ def droneCommServer(ip):
 
 def brainStatus(IP):
     global state
-    tSleep = 10
+    tSleep = 5
     while running:
         print('--- Check Brain Connectivity')
         time.sleep(tSleep)
