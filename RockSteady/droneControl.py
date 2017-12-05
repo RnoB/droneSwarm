@@ -25,7 +25,7 @@ def generateSinFunction(xCrop):
     
     print('More Generation')
     print(X)
-    print(np.power(X,2))
+    print(np.power(X,2)+np.power(Y,2))
     R=np.power(X,2)+np.power(Y,2);
     print('More Generation')
     circle = R<.99
