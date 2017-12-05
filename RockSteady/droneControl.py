@@ -14,6 +14,7 @@ from core.bebop import *
 def generateSinFunction(xCrop):
 
     print('Start Generation')
+    print(xCrop)
     x=np.linspace(-1,1,xCrop[-1]*2);
     
     X=np.tile(x,(976,1))
@@ -181,6 +182,7 @@ class vision:
 
 
     def sectionCrop(self,crop):
+        print('crop : '+str(crop))
         xCenter = int(crop[1])
         yCenter = int(crop[2])
         RMax = int(crop[0])
@@ -189,6 +191,7 @@ class vision:
         xMin = xCenter-RMax
         yMin = yCenter-RMax
         self.xCrop = [xMin,xMax,yMin,yMax,xCenter,yCenter,RMax]
+        print('xCrop : '+str(self.xCrop))
 
     def visionUpdater(self):
 
