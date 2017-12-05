@@ -111,16 +111,16 @@ class visionAnalyzer(PiRGBAnalysis):
             t1=time.time()
             print('opencv thresholding : '+str(t1-t0))
             t0=time.time()
-        frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
-        ORANGE_MIN = np.array([0, 50, 50],np.uint8)
-        ORANGE_MAX = np.array([25, 255, 255],np.uint8)
+        #frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
+        #ORANGE_MIN = np.array([0, 50, 50],np.uint8)
+        #ORANGE_MAX = np.array([25, 255, 255],np.uint8)
 
-        hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
+        #hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
 
-        thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
+        #thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
         
-        #redMask = frameC[:,:,2]>self.thresholdRed
-        #blueMask = frameC[:,:,0]<self.thresholdBlue
+        redMask = frameC[:,:,2]>self.thresholdRed
+        blueMask = frameC[:,:,0]<self.thresholdBlue
 
         #maskRB = np.array(thres)
         #maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
@@ -169,8 +169,8 @@ class visionAnalyzer(PiRGBAnalysis):
         #print('numpy integration  : '+str(t1-t0))
         #t0=time.time()
         #A=self.VcoscosA
-        cv2.imwrite('/home/pi/imTest/front'+str(self.i)+'.jpg',thres)
-        #cv2.imwrite('/home/pi/imTest/side'+str(self.i)+'.jpg',maskRB)
+        cv2.imwrite('/home/pi/imTest/front'+str(self.i)+'.jpg',redMask)
+        cv2.imwrite('/home/pi/imTest/side'+str(self.i)+'.jpg',blueMask)
         #frameC[maskRB]=0
         #cv2.imwrite('/home/pi/imTest/image'+str(self.i)+'.jpg',frameC)
         #print('image'+str(self.i)+'.jpg')
