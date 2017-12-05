@@ -46,10 +46,10 @@ def generateSinFunction(xCrop):
     Vcoscos = np.cos(phi)*np.cos(theta)*circle
     Vcossin = np.sin(phi)*np.cos(theta)*circle
     Vsin = np.sin(theta)*circle
-    VcoscosA = Vcoscos*dTheta*dPhi
-    VcoscosR = Vcoscos*dTheta
-    VcossinA = Vcossin*dTheta*dPhi
-    VcossinR = Vcossin*dTheta
+    VcoscosA = np.array(Vcoscos*dTheta*dPhi)
+    VcoscosR = np.array(Vcoscos*dTheta)
+    VcossinA = np.array(Vcossin*dTheta*dPhi)
+    VcossinR = np.array(Vcossin*dTheta)
     VsinA = Vsin*np.power(dPhi,2)*dTheta*dPhi
     VsinR = Vsin*np.power(dPhi,1)*dTheta
     
