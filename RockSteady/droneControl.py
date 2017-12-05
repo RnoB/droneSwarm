@@ -14,7 +14,6 @@ from core.bebop import *
 def generateSinFunction(xCrop):
 
 
-    print(xCrop)
     x=np.linspace(-1,1,xCrop[-1]*2);
     
     X=np.tile(x,(976,1))
@@ -41,7 +40,7 @@ def generateSinFunction(xCrop):
     dTheta = (np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0))/2.0
     dTheta = circle*(dTheta*(dTheta>0))
     dPhi = dPhi*circle
-    circularMask = R<1
+    circularMask = R<.98
 
     Vcoscos = np.cos(phi)*np.cos(theta)*circle
     Vcossin = np.sin(phi)*np.cos(theta)*circle
@@ -148,10 +147,10 @@ class visionAnalyzer(PiRGBAnalysis):
         t1=time.time()
         print('opencv integration : '+str(t1-t0))
         t0=time.time()
-        self.duV = np.sum(self.VcoscosA*maskRB)
-        self.dudV = np.sum(self.VcoscosR*maskdRB)
-        self.dpV = np.sum(self.VcossinA*maskRB)
-        self.dpdV = np.sum(self.VcossinR*maskdRB)
+        self.duV = np.sum(self.VcoscosA[maskRB])
+        self.dudV = np.sum(self.VcoscosR[maskdRB])
+        self.dpV = np.sum(self.VcossinA[maskRB])
+        self.dpdV = np.sum(self.VcossinR[maskdRB])
         t1=time.time()
         print('numpy integration  : '+str(t1-t0))
         t0=time.time()
@@ -176,7 +175,6 @@ class vision:
 
 
     def sectionCrop(self,crop):
-        print('crop : '+str(crop))
         xCenter = int(crop[1])
         yCenter = int(crop[2])
         RMax = int(crop[0])
@@ -185,7 +183,6 @@ class vision:
         xMin = xCenter-RMax
         yMin = yCenter-RMax
         self.xCrop = [xMin,xMax,yMin,yMax,xCenter,yCenter,RMax]
-        print('xCrop : '+str(self.xCrop))
 
     def visionUpdater(self):
 
