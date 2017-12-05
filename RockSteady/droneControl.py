@@ -64,7 +64,7 @@ class visionAnalyzer(PiRGBAnalysis):
     
     i=0
     thresholdRed = 50
-    thresholdBlue = 50
+    thresholdBlue = 100
 
     xCrop = []
     t0 = 0
@@ -160,7 +160,7 @@ class visionAnalyzer(PiRGBAnalysis):
         cv2.imwrite('/home/pi/imTest/side'+str(self.i)+'.jpg',self.VcossinA*maskRB)
         cv2.imwrite('/home/pi/imTest/image'+str(self.i)+'.jpg',frameC)
         #print('image'+str(self.i)+'.jpg')
-        #self.i=self.i+1
+        self.i=self.i+1
         t1=time.time()
         print('fps : ' + str(int(1/(t1-self.t0))))
         self.t0 = t1
