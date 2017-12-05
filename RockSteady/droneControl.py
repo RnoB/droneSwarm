@@ -45,11 +45,11 @@ def generateSinFunction(xCrop):
     Vcoscos = np.cos(phi)*np.cos(theta)*circle
     Vcossin = np.sin(phi)*np.cos(theta)*circle
     Vsin = np.sin(theta)*circle
-    VcoscosA = np.array(Vcoscos*dTheta)
+    VcoscosA = np.array(Vcoscos*dTheta*circularMask)
     VcoscosR = np.array(Vcoscos*dTheta*dPhi)
-    VcossinA = np.array(Vcossin*dTheta)
+    VcossinA = np.array(Vcossin*dTheta*circularMask)
     VcossinR = np.array(Vcossin*dTheta*dPhi)
-    VsinA = Vsin*np.power(dPhi,2)*dTheta
+    VsinA = Vsin*np.power(dPhi,2)*dTheta*circularMask
     VsinR = Vsin*np.power(dPhi,1)*dTheta*dPhi
     
 
@@ -103,66 +103,68 @@ class visionAnalyzer(PiRGBAnalysis):
         #if self.threshold>200:
         #    self.threshold = 0
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
-        frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
-        t0=time.time()
-        ret,thres = cv2.threshold(frameC[:,:,2],self.thresholdRed,255,cv2.THRESH_BINARY)
-        ret,thres2 = cv2.threshold(frameC[:,:,0],self.thresholdBlue,255,cv2.THRESH_BINARY_INV)
-        thres = cv2.multiply(thres,thres2)
-        t1=time.time()
-        print('opencv thresholding : '+str(t1-t0))
-        t0=time.time()
+        if False:
+            frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
+            t0=time.time()
+            ret,thres = cv2.threshold(frameC[:,:,2],self.thresholdRed,255,cv2.THRESH_BINARY)
+            ret,thres2 = cv2.threshold(frameC[:,:,0],self.thresholdBlue,255,cv2.THRESH_BINARY_INV)
+            thres = cv2.multiply(thres,thres2)
+            t1=time.time()
+            print('opencv thresholding : '+str(t1-t0))
+            t0=time.time()
         redMask = frameC[:,:,2]>self.thresholdRed
         blueMask = frameC[:,:,0]<self.thresholdBlue
 
         maskRB = np.array(redMask*blueMask)
-        maskdRB = np.array((np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1)))
-        t1=time.time()
-        print('numpy thresholding  : '+str(t1-t0))
+        maskdRB = (np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))
+        #t1=time.time()
+        #print('numpy thresholding  : '+str(t1-t0))
         #kernel = np.ones((5,5),np.uint8)
         #thres = cv2.erode(thres,kernel,iterations = 1)
         #thres = cv2.dilate(thres,kernel,iterations = 3)
-        t0=time.time()
-        im2,contours,hierarchy = cv2.findContours(thres ,cv2.RETR_LIST ,cv2.CHAIN_APPROX_SIMPLE)
-        #cv2.drawContours(thres,contours,-1,(0,0,255),2)
+        #t0=time.time()
+        if False:
+            im2,contours,hierarchy = cv2.findContours(thres ,cv2.RETR_LIST ,cv2.CHAIN_APPROX_SIMPLE)
+            #cv2.drawContours(thres,contours,-1,(0,0,255),2)
 
 
-        for contour in contours:
-            if len(contour)>20:
-                contX = ((contour[:,0,0]-self.xCrop[-1])/float(self.xCrop[-1]))
-                contY = ((contour[:,0,1]-self.xCrop[5])/float(self.xCrop[-1]))
-                phi = (self.fov*np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2)))))-math.pi/2
-                theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
-                phiMax = np.max(phi)
-                phiMin = np.min(phi)
-                self.duV = self.duV + (math.sin(phiMax)-math.sin(phiMin))
-                self.dpV = self.dpV - (math.cos(phiMax)-math.cos(phiMin))
-                if phiMin>-.95*math.pi:
-                    self.dudV = self.dudV + (math.cos(phiMin))
-                    self.dpdV = self.dpdV + (math.sin(phiMin))
-                if phiMax<-.05*math.pi:
-                    self.dudV = self.dudV + (math.cos(phiMax))
-                    self.dpdV = self.dpdV + (math.sin(phiMax))
+            for contour in contours:
+                if len(contour)>20:
+                    contX = ((contour[:,0,0]-self.xCrop[-1])/float(self.xCrop[-1]))
+                    contY = ((contour[:,0,1]-self.xCrop[5])/float(self.xCrop[-1]))
+                    phi = (self.fov*np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2)))))-math.pi/2
+                    theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
+                    phiMax = np.max(phi)
+                    phiMin = np.min(phi)
+                    self.duV = self.duV + (math.sin(phiMax)-math.sin(phiMin))
+                    self.dpV = self.dpV - (math.cos(phiMax)-math.cos(phiMin))
+                    if phiMin>-.95*math.pi:
+                        self.dudV = self.dudV + (math.cos(phiMin))
+                        self.dpdV = self.dpdV + (math.sin(phiMin))
+                    if phiMax<-.05*math.pi:
+                        self.dudV = self.dudV + (math.cos(phiMax))
+                        self.dpdV = self.dpdV + (math.sin(phiMax))
 
 
-        t1=time.time()
-        print('opencv integration : '+str(t1-t0))
+            t1=time.time()
+            print('opencv integration : '+str(t1-t0))
         
-        t0=time.time()
+        #t0=time.time()
 
         self.duV = np.sum(self.VcoscosA[maskRB])
         self.dudV = np.sum(self.VcoscosR[maskdRB])
         self.dpV = np.sum(self.VcossinA[maskRB])
         self.dpdV = np.sum(self.VcossinR[maskdRB])
-        t1=time.time()
-        print('numpy integration  : '+str(t1-t0))
-        t0=time.time()
+        #t1=time.time()
+        #print('numpy integration  : '+str(t1-t0))
+        #t0=time.time()
         #cv2.imwrite('./imTest/image'+str(self.i)+'.jpg',frameC)
         #cv2.imwrite('./imTest/thres'+str(self.i)+'.jpg',thres)
         #print('image'+str(self.i)+'.jpg')
-        self.i=self.i+1
-        t1=time.time()
+        #self.i=self.i+1
+        #t1=time.time()
         #print('fps : ' + str(int(1/(t1-self.t0))))
-        self.t0 = t1
+        #self.t0 = t1
         #print('thres : ' + str(self.threshold))
 
 
