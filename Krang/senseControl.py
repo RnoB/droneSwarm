@@ -83,7 +83,7 @@ class senseController():
 
 
     def pushed_left(self):
-        self.redMat()
+        #self.redMat()
         print('left')
 
 
