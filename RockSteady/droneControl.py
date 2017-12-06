@@ -180,6 +180,7 @@ class visionAnalyzer(PiRGBAnalysis):
         cv2.imwrite('/home/pi/imTest/blue'+n+'.jpg',frameC[:,:,0])
         cv2.imwrite('/home/pi/imTest/green'+n+'.jpg',frameC[:,:,1])
         cv2.imwrite('/home/pi/imTest/red'+n+'.jpg',frameC[:,:,2])
+        cv2.imwrite('/home/pi/imTest/redgreen'+n+'.jpg',frameC[:,:,2]-frameC[:,:,1])
         #im = np.array(maskRB * 255, dtype = np.uint8)
         #cv2.imwrite('/home/pi/imTest/thres '+str(self.i)+'.jpg',thres)
         
