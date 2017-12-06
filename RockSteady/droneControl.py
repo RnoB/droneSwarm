@@ -110,14 +110,17 @@ class visionAnalyzer(PiRGBAnalysis):
             thres = cv2.multiply(thres,thres2)
             t1=time.time()
             print('opencv thresholding : '+str(t1-t0))
-            t0=time.time()
+        t0=time.time()
         #frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
-        #ORANGE_MIN = np.array([0, 50, 50],np.uint8)
-        #ORANGE_MAX = np.array([25, 255, 255],np.uint8)
+        ORANGE_MIN = np.array([0, 50, 50],np.uint8)
+        ORANGE_MAX = np.array([25, 255, 255],np.uint8)
 
-        #hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
+        hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
 
-        #thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
+        thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
+        t1=time.time()
+        print('opencv thresholding : '+str(t1-t0))
+        t0=time.time()
         
         redMask = frameC[:,:,2]>self.thresholdRed
         blueMask = frameC[:,:,0]<self.thresholdBlue
@@ -174,7 +177,7 @@ class visionAnalyzer(PiRGBAnalysis):
         im = np.array(blueMask * 255, dtype = np.uint8)
         cv2.imwrite('/home/pi/imTest/blue'+str(self.i)+'.jpg',im)
         im = np.array(maskRB * 255, dtype = np.uint8)
-        cv2.imwrite('/home/pi/imTest/redBlue'+str(self.i)+'.jpg',im)
+        cv2.imwrite('/home/pi/imTest/redBlue'+str(self.i)+'.jpg',thres)
         cv2.imwrite('/home/pi/imTest/frame'+str(self.i)+'.jpg',frameC)
         #frameC[maskRB]=0
         #cv2.imwrite('/home/pi/imTest/image'+str(self.i)+'.jpg',frameC)
