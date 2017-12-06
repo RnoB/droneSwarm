@@ -27,17 +27,17 @@ with picamera.PiCamera() as camera:
                 
                 camera.exposure_mode = 'off'
                 camera.awb_mode = 'off'
-                b=0
-                r=0
+                b=5.5
+                r=1.8
 
                 camera.awb_gains=(r,b)
                 firstRound = False
             if not firstRound:
-                r=r+.3
-                if r>8:
-                    r=0
-                    b=b+.3
-                if b>8:
+                r=r+.1
+                if r>3.5:
+                    r=1.8
+                    b=b+.1
+                if b>7.6:
                     break
                 camera.awb_gains=(r,b)
                 
