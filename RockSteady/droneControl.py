@@ -123,7 +123,7 @@ class visionAnalyzer(PiRGBAnalysis):
         t0=time.time()
         
         maskRB = np.subtract(frameC[:,:,2], frameC[:,:,1].astype(np.int16))
-        maskRb=maskRB>self.thresholdRed
+        maskRB=maskRB>self.thresholdRed
         #blueMask = frameC[:,:,0]<self.thresholdBlue
 
         #maskRB = redMask*blueMask
@@ -181,7 +181,7 @@ class visionAnalyzer(PiRGBAnalysis):
         cv2.imwrite('/home/pi/imTest/blue'+n+'.jpg',frameC[:,:,0])
         cv2.imwrite('/home/pi/imTest/green'+n+'.jpg',frameC[:,:,1])
         cv2.imwrite('/home/pi/imTest/red'+n+'.jpg',frameC[:,:,2])
-        cv2.imwrite('/home/pi/imTest/redgreen'+n+'.jpg',np.subtract(frameC[:,:,2], frameC[:,:,2].astype(np.int16)).clip(0, 255).astype(np.uint8))
+        cv2.imwrite('/home/pi/imTest/redgreen'+n+'.jpg',np.subtract(frameC[:,:,2], frameC[:,:,1].astype(np.int16)).clip(0, 255).astype(np.uint8))
         #im = np.array(maskRB * 255, dtype = np.uint8)
         #cv2.imwrite('/home/pi/imTest/thres '+str(self.i)+'.jpg',thres)
         
