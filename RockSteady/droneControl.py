@@ -131,7 +131,7 @@ class visionAnalyzer(PiRGBAnalysis):
 
 
         t1=time.time()
-        print('numpy thresholding  : '+str(t1-t0))
+        #print('numpy thresholding  : '+str(t1-t0))
         #kernel = np.ones((5,5),np.uint8)
         #thres = cv2.erode(thres,kernel,iterations = 1)
         #thres = cv2.dilate(thres,kernel,iterations = 3)
@@ -163,20 +163,21 @@ class visionAnalyzer(PiRGBAnalysis):
             print('opencv integration : '+str(t1-t0))
         
         #t0=time.time()
-
+        n = str(self.i).zfill(5)
         self.duV = np.sum(self.VcoscosR[maskRB])
         self.dudV = np.sum(self.VcoscosA[maskdRB])
         self.dpV = np.sum(self.VcossinR[maskRB])
         self.dpdV = np.sum(self.VcossinA[maskdRB])
+        print('frame : '+n)
         print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
         t1=time.time()
-        print('numpy integration  : '+str(t1-t0))
+        #print('numpy integration  : '+str(t1-t0))
 
         #t0=time.time()
         #A=self.VcoscosA
-        #n = str(self.i).zfill(5)
-        #im = np.array(maskRB * 255, dtype = np.uint8)
-        #cv2.imwrite('/home/pi/imTest/mask'+n+'.jpg',im)
+        #
+        im = np.array(maskRB * 255, dtype = np.uint8)
+        cv2.imwrite('/home/pi/imTest/mask'+n+'.jpg',im)
         #im = np.array(blueMask * 255, dtype = np.uint8)
         #cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
         #cv2.imwrite('/home/pi/imTest/blue'+n+'.jpg',frameC[:,:,0])
