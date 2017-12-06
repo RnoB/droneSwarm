@@ -125,7 +125,7 @@ class visionAnalyzer(PiRGBAnalysis):
         maskRB = (frameC[:,:,2]-frameC[:,:,1])>self.thresholdRed
         #blueMask = frameC[:,:,0]<self.thresholdBlue
 
-        maskRB = redMask*blueMask
+        #maskRB = redMask*blueMask
         maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
 
 
