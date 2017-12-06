@@ -112,8 +112,8 @@ class visionAnalyzer(PiRGBAnalysis):
             print('opencv thresholding : '+str(t1-t0))
         t0=time.time()
         #frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
-        ORANGE_MIN = np.array([0, 0, 0],np.uint8)
-        ORANGE_MAX = np.array([50, 255, 255],np.uint8)
+        ORANGE_MIN = np.array([50, 0, 0],np.uint8)
+        ORANGE_MAX = np.array([100, 255, 255],np.uint8)
 
         hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
 
@@ -121,12 +121,12 @@ class visionAnalyzer(PiRGBAnalysis):
         t1=time.time()
         print('opencv thresholding : '+str(t1-t0))
         t0=time.time()
-        
-        redMask = frameC[:,:,2]>self.thresholdRed
-        blueMask = frameC[:,:,0]<self.thresholdBlue
+        if False:
+            redMask = frameC[:,:,2]>self.thresholdRed
+            blueMask = frameC[:,:,0]<self.thresholdBlue
 
-        maskRB = redMask*blueMask
-        maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
+            maskRB = redMask*blueMask
+            maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
 
 
         t1=time.time()
@@ -172,12 +172,12 @@ class visionAnalyzer(PiRGBAnalysis):
         #print('numpy integration  : '+str(t1-t0))
         #t0=time.time()
         #A=self.VcoscosA
-        im = np.array(redMask * 255, dtype = np.uint8)
-        cv2.imwrite('/home/pi/imTest/red'+str(self.i)+'.jpg',im)
-        im = np.array(blueMask * 255, dtype = np.uint8)
-        cv2.imwrite('/home/pi/imTest/blue'+str(self.i)+'.jpg',im)
-        im = np.array(maskRB * 255, dtype = np.uint8)
-        cv2.imwrite('/home/pi/imTest/redBlue'+str(self.i)+'.jpg',thres)
+        #im = np.array(redMask * 255, dtype = np.uint8)
+        #cv2.imwrite('/home/pi/imTest/red'+str(self.i)+'.jpg',im)
+        #im = np.array(blueMask * 255, dtype = np.uint8)
+        #cv2.imwrite('/home/pi/imTest/blue'+str(self.i)+'.jpg',im)
+        #im = np.array(maskRB * 255, dtype = np.uint8)
+        cv2.imwrite('/home/pi/imTest/thres '+str(self.i)+'.jpg',thres)
         cv2.imwrite('/home/pi/imTest/frame'+str(self.i)+'.jpg',frameC)
         #frameC[maskRB]=0
         #cv2.imwrite('/home/pi/imTest/image'+str(self.i)+'.jpg',frameC)
