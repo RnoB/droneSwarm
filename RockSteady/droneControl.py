@@ -164,14 +164,14 @@ class visionAnalyzer(PiRGBAnalysis):
         
         #t0=time.time()
 
-        self.duV = np.sum(cv2.multiply(self.VcoscosA,thres))
-        self.dudV = np.sum(self.VcoscosR[maskdRB])
-        self.dpV = np.sum(self.VcossinA[maskRB])
-        self.dpdV = np.sum(self.VcossinR[maskdRB])
+        self.duV = np.sum(self.VcoscosR[maskRB])
+        self.dudV = np.sum(self.VcoscosA[maskdRB])
+        self.dpV = np.sum(self.VcossinR[maskRB])
+        self.dpdV = np.sum(self.VcossinA[maskdRB])
         print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
         t1=time.time()
         print('numpy integration  : '+str(t1-t0))
-        
+
         #t0=time.time()
         #A=self.VcoscosA
         #n = str(self.i).zfill(5)
