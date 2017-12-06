@@ -65,7 +65,7 @@ class visionAnalyzer(PiRGBAnalysis):
     dpdV = 0
     
     i=0
-    thresholdRed = 50
+    thresholdRed = 100
     thresholdBlue = 200
 
     xCrop = []
@@ -172,10 +172,14 @@ class visionAnalyzer(PiRGBAnalysis):
         #print('numpy integration  : '+str(t1-t0))
         #t0=time.time()
         #A=self.VcoscosA
+        n = str(self.i).zfill(5)
         im = np.array(maskRB * 255, dtype = np.uint8)
-        cv2.imwrite('/home/pi/imTest/mask'+str(self.i)+'.jpg',im)
+        cv2.imwrite('/home/pi/imTest/mask'+n+'.jpg',im)
         #im = np.array(blueMask * 255, dtype = np.uint8)
-        cv2.imwrite('/home/pi/imTest/frame'+str(self.i)+'.jpg',frameC)
+        cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
+        cv2.imwrite('/home/pi/imTest/blue'+n+'.jpg',frameC[:,:,0])
+        cv2.imwrite('/home/pi/imTest/green'+n+'.jpg',frameC[:,:,1])
+        cv2.imwrite('/home/pi/imTest/red'+n+'.jpg',frameC[:,:,2])
         #im = np.array(maskRB * 255, dtype = np.uint8)
         #cv2.imwrite('/home/pi/imTest/thres '+str(self.i)+'.jpg',thres)
         
