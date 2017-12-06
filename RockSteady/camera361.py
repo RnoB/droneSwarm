@@ -7,8 +7,8 @@ with picamera.PiCamera() as camera:
     camera.resolution = (1296,976)
     #camera.zoom = ( .3563 , 0.2875 , 228/640 , 228/480 )
     camera.framerate = 10
-    camera.iso = 800
-    camera.shutter_speed = 100000
+    camera.iso = 400
+    camera.shutter_speed = 50000
     #camera.awb_mode = 'off'
     #camera.awb_gains=(1,1)
     #camera.exposure_speed = 100
@@ -16,7 +16,7 @@ with picamera.PiCamera() as camera:
     camera.exposure_compensation = 25
     camera.start_preview()
     firstRound = True
-    time.sleep(30)
+    
     try:
         for i, filename in enumerate(camera.capture_continuous('/home/pi/imTest/image{counter:04d}.jpg', use_video_port=True)):
             
