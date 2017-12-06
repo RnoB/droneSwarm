@@ -33,10 +33,10 @@ with picamera.PiCamera() as camera:
                 camera.awb_gains=(r,b)
                 firstRound = False
             if not firstRound:
-                r=r+.1
+                r=r+.3
                 if r>8:
                     r=0
-                    b=b+.1
+                    b=b+.3
                 if b>8:
                     break
                 camera.awb_gains=(r,b)
