@@ -171,6 +171,7 @@ class visionAnalyzer(PiRGBAnalysis):
         print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
         t1=time.time()
         print('numpy integration  : '+str(t1-t0))
+        
         #t0=time.time()
         #A=self.VcoscosA
         #n = str(self.i).zfill(5)
