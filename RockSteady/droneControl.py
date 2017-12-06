@@ -65,7 +65,7 @@ class visionAnalyzer(PiRGBAnalysis):
     dpdV = 0
     
     i=0
-    thresholdRed = 100
+    thresholdRed = 50
     thresholdBlue = 200
 
     xCrop = []
@@ -122,7 +122,8 @@ class visionAnalyzer(PiRGBAnalysis):
             print('opencv thresholding : '+str(t1-t0))
         t0=time.time()
         
-        maskRB = (frameC[:,:,2]-frameC[:,:,1])>self.thresholdRed
+        maskRB = np.subtract(frameC[:,:,2], frameC[:,:,2].astype(np.int16)).clip(0, 255).astype(np.uint8)
+        maskRb=maskRB>self.thresholdRed
         #blueMask = frameC[:,:,0]<self.thresholdBlue
 
         #maskRB = redMask*blueMask
@@ -180,7 +181,7 @@ class visionAnalyzer(PiRGBAnalysis):
         cv2.imwrite('/home/pi/imTest/blue'+n+'.jpg',frameC[:,:,0])
         cv2.imwrite('/home/pi/imTest/green'+n+'.jpg',frameC[:,:,1])
         cv2.imwrite('/home/pi/imTest/red'+n+'.jpg',frameC[:,:,2])
-        cv2.imwrite('/home/pi/imTest/redgreen'+n+'.jpg',frameC[:,:,2]-frameC[:,:,1])
+        cv2.imwrite('/home/pi/imTest/redgreen'+n+'.jpg',p.subtract(frameC[:,:,2], frameC[:,:,2].astype(np.int16)).clip(0, 255).astype(np.uint8))
         #im = np.array(maskRB * 255, dtype = np.uint8)
         #cv2.imwrite('/home/pi/imTest/thres '+str(self.i)+'.jpg',thres)
         
