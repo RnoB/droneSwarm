@@ -23,7 +23,7 @@ with picamera.PiCamera() as camera:
             print(filename)
             print('analog gain : '+str(camera.analog_gain)+' digital_gain : '+str(camera.digital_gain))
 
-            if camera.analog_gain >5 and camera.digital_gain > 1 and firstRound:
+            if camera.analog_gain >7 and camera.digital_gain > 1 and firstRound:
                 
                 camera.exposure_mode = 'off'
                 camera.awb_mode = 'off'
