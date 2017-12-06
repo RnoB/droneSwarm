@@ -113,7 +113,7 @@ class visionAnalyzer(PiRGBAnalysis):
         t0=time.time()
         #frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
         ORANGE_MIN = np.array([0, 50, 50],np.uint8)
-        ORANGE_MAX = np.array([25, 255, 255],np.uint8)
+        ORANGE_MAX = np.array([50, 255, 255],np.uint8)
 
         hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
 
