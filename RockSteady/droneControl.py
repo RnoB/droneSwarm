@@ -126,15 +126,15 @@ class visionAnalyzer(PiRGBAnalysis):
         blueMask = frameC[:,:,0]<self.thresholdBlue
 
         maskRB = redMask*blueMask
-        #maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
+        maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
 
 
-        #t1=time.time()
-        #print('numpy thresholding  : '+str(t1-t0))
+        t1=time.time()
+        print('numpy thresholding  : '+str(t1-t0))
         #kernel = np.ones((5,5),np.uint8)
         #thres = cv2.erode(thres,kernel,iterations = 1)
         #thres = cv2.dilate(thres,kernel,iterations = 3)
-        #t0=time.time()
+        t0=time.time()
         if False:
             im2,contours,hierarchy = cv2.findContours(thres ,cv2.RETR_LIST ,cv2.CHAIN_APPROX_SIMPLE)
             #cv2.drawContours(thres,contours,-1,(0,0,255),2)
