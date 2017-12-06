@@ -65,7 +65,7 @@ class visionAnalyzer(PiRGBAnalysis):
     dpdV = 0
     
     i=0
-    thresholdRed = 20
+    thresholdRed = 50
     thresholdBlue = 200
 
     xCrop = []
@@ -110,23 +110,23 @@ class visionAnalyzer(PiRGBAnalysis):
             thres = cv2.multiply(thres,thres2)
             t1=time.time()
             print('opencv thresholding : '+str(t1-t0))
-        t0=time.time()
-        #frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
-        ORANGE_MIN = np.array([160, 100, 100],np.uint8)
-        ORANGE_MAX = np.array([180, 255, 200],np.uint8)
+            t0=time.time()
+            #frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
+            ORANGE_MIN = np.array([160, 100, 100],np.uint8)
+            ORANGE_MAX = np.array([180, 255, 200],np.uint8)
 
-        hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
+            hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
 
-        thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
-        t1=time.time()
-        print('opencv thresholding : '+str(t1-t0))
-        t0=time.time()
-        if False:
-            redMask = frameC[:,:,2]>self.thresholdRed
-            blueMask = frameC[:,:,0]<self.thresholdBlue
+            thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
+            t1=time.time()
+            print('opencv thresholding : '+str(t1-t0))
+            t0=time.time()
+        
+        maskRB = (frameC[:,:,2]-frameC[:,:,1])>self.thresholdRed
+        #blueMask = frameC[:,:,0]<self.thresholdBlue
 
-            maskRB = redMask*blueMask
-            maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
+        maskRB = redMask*blueMask
+        maskdRB = (np.roll(thres,1,axis=1) != np.roll(thres,-1,axis=1))
 
 
         t1=time.time()
@@ -172,10 +172,10 @@ class visionAnalyzer(PiRGBAnalysis):
         #print('numpy integration  : '+str(t1-t0))
         #t0=time.time()
         #A=self.VcoscosA
-        #im = np.array(redMask * 255, dtype = np.uint8)
-        #cv2.imwrite('/home/pi/imTest/red'+str(self.i)+'.jpg',im)
+        im = np.array(maskRB * 255, dtype = np.uint8)
+        cv2.imwrite('/home/pi/imTest/mask'+str(self.i)+'.jpg',im)
         #im = np.array(blueMask * 255, dtype = np.uint8)
-        #cv2.imwrite('/home/pi/imTest/blue'+str(self.i)+'.jpg',im)
+        cv2.imwrite('/home/pi/imTest/frame'+str(self.i)+'.jpg',frameC)
         #im = np.array(maskRB * 255, dtype = np.uint8)
         #cv2.imwrite('/home/pi/imTest/thres '+str(self.i)+'.jpg',thres)
         
@@ -217,13 +217,13 @@ class vision:
             camera.resolution = (1296,976)
             #camera.zoom = ( .3563 , 0.2875 , 228/640 , 228/480 )
             camera.framerate = 10
-            camera.iso = 400
+            camera.iso = 800
             camera.shutter_speed = 50000
             camera.awb_mode = 'off'
-            camera.awb_gains=(8,2)
+            camera.awb_gains=(6.7,2.1)
             #camera.exposure_speed = 100
             #camera.exposure_mode = 'night'
-            camera.exposure_compensation = 25
+            camera.exposure_compensation = 20
         
             firstRound = True
             running =True 
