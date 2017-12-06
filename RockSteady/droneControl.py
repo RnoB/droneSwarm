@@ -216,8 +216,8 @@ class vision:
             camera.resolution = (1296,976)
             #camera.zoom = ( .3563 , 0.2875 , 228/640 , 228/480 )
             camera.framerate = 10
-            camera.iso = 800
-            camera.shutter_speed = 5000
+            camera.iso = 400
+            camera.shutter_speed = 50000
             camera.awb_mode = 'off'
             camera.awb_gains=(8,2)
             #camera.exposure_speed = 100
