@@ -220,7 +220,7 @@ class vision:
             camera.iso = 800
             camera.shutter_speed = 50000
             camera.awb_mode = 'off'
-            camera.awb_gains=(6.7,2.1)
+            camera.awb_gains=(2.5,6)
             #camera.exposure_speed = 100
             #camera.exposure_mode = 'night'
             camera.exposure_compensation = 20
