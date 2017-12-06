@@ -120,7 +120,7 @@ class visionAnalyzer(PiRGBAnalysis):
             thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
             t1=time.time()
             print('opencv thresholding : '+str(t1-t0))
-            t0=time.time()
+        t0=time.time()
         
         maskRB = (frameC[:,:,2]-frameC[:,:,1])>self.thresholdRed
         #blueMask = frameC[:,:,0]<self.thresholdBlue
