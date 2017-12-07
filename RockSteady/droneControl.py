@@ -42,15 +42,15 @@ def generateSinFunction(xCrop):
     dPhi = dPhi*circle
     circularMask = R<.98
  
-    Vcoscos = np.cos(phi)*np.cos(theta)*circle
-    Vcossin = np.sin(phi)*np.cos(theta)*circle
+    Vcoscos = np.cos(phi)*circle
+    Vcossin = np.sin(phi)*circle
     Vsin = np.sin(theta)*circle
-    VcoscosA = np.array(Vcoscos*dTheta*circularMask)
-    VcoscosR = np.array(Vcoscos*dTheta*dPhi)
-    VcossinA = np.array(Vcossin*dTheta*circularMask)
-    VcossinR = np.array(Vcossin*dTheta*dPhi)
-    VsinA = Vsin*np.power(dPhi,2)*dTheta*circularMask
-    VsinR = Vsin*np.power(dPhi,1)*dTheta*dPhi
+    VcoscosA = np.array(Vcoscos*circularMask)
+    VcoscosR = np.array(Vcoscos*dPhi)
+    VcossinA = np.array(Vcossin*circularMask)
+    VcossinR = np.array(Vcossin*dPhi)
+    VsinA = Vsin*np.power(dPhi,2)circularMask
+    VsinR = Vsin*np.power(dPhi,1)*dPhi
     
     
     #im = np.array(Vcoscos * 255, dtype = np.uint8)
@@ -165,9 +165,9 @@ class visionAnalyzer(PiRGBAnalysis):
         #t0=time.time()
         n = str(self.i).zfill(5)
         self.duV = np.sum(self.VcoscosR[maskRB])
-        self.dudV = np.sum(self.VcoscosA[maskdRB])
+        self.dudV = np.sum(self.VcoscosA[maskdRB])/2.0
         self.dpV = np.sum(self.VcossinR[maskRB])
-        self.dpdV = np.sum(self.VcossinA[maskdRB])
+        self.dpdV = np.sum(self.VcossinA[maskdRB])/2.0
         print('frame : '+n)
         print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
         t1=time.time()
