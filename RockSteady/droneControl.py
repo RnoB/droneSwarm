@@ -30,14 +30,17 @@ def generateSinFunction(xCrop):
     
     
 
-    R=np.power(X,2)+np.power(Y,2)
+    fov = math.pi * 220/180
+    R=np.sqrt(np.power(X,2)+np.power(Y,2));
     circle = R<.99
     R[R>1]=0
-    phi = 1.2*(np.arctan2(X,1-R))-math.pi/2
-    theta = np.arctan2(Y,np.sqrt(1-np.power(Y,2)))
-    dPhi = (np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1))/2.0
+    phi2 = (np.arctan2(Y,X))
+    theta2 = fov * R - math.pi/2
+    phi = np.arctan2(np.tan(theta2),np.sin(phi2))
+    theta = np.arcsin(np.cos(theta2)*np.cos(phi2))
+    dPhi = np.abs((np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1))%math.pi)/2.0
     #dPhi = dPhi*circle
-    dTheta = (np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0))/2.0
+    dTheta = np.abs((np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0))%math.pi)/2.0
     dTheta = circle*(dTheta*(dTheta>0))
     dPhi = dPhi*circle
     circularMask = R<.98
