@@ -21,3 +21,9 @@ An additional command for a central router is provided (Krang). this router is c
 1 x sense hat
 
 The purpose of this connection is to send take off and landing commands to each drone of the swarm with the switch on the sense hat. Additionally, the LED panel provides limited information on the state of the drone's brain. Potentially, if one does not care about fail-safe command, the router can be completely removed from the whole system. 
+
+The control of the drone is using the library from
+
+https://github.com/al3Co/BebopDrone
+
+This works fine with firmware 4.0.5 not with 4.4.x
