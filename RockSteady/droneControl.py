@@ -97,11 +97,11 @@ class visionAnalyzer(PiRGBAnalysis):
     def __init__(self,camera,sectionCrop):
         super(visionAnalyzer,self).__init__(camera)
         self.xCrop = sectionCrop
-        #self.circularMask = np.zeros((976,self.xCrop[-1]*2),np.uint8)
+
         print('generateSinFunction')
         self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction(self.xCrop)
         print('generatedSinFunction')
-        #cv2.circle(self.circularMask,((self.xCrop[-1]),self.xCrop[5]),(self.xCrop[-1]),1,thickness=-1)
+
 
         
 
@@ -126,87 +126,9 @@ class visionAnalyzer(PiRGBAnalysis):
         print('fps : ' + str(int(1/(t1-self.t0))))
         self.t0 = t1
 
-        #self.threshold=self.threshold+1
-        #if self.threshold>200:
-        #    self.threshold = 0
-        #frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
-        #if False:
-        #    frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
-        #    t0=time.time()
-        #    ret,thres = cv2.threshold(frameC[:,:,2],self.thresholdRed,255,cv2.THRESH_BINARY)
-        #    ret,thres2 = cv2.threshold(frameC[:,:,0],self.thresholdBlue,255,cv2.THRESH_BINARY_INV)
-        #    thres = cv2.multiply(thres,thres2)
-        #    t1=time.time()
-        #    print('opencv thresholding : '+str(t1-t0))
-        #    t0=time.time()
-            #frameC = cv2.bitwise_and(frameC,frameC,mask = self.circularMask)
-        #    ORANGE_MIN = np.array([160, 100, 100],np.uint8)
-        #    ORANGE_MAX = np.array([180, 255, 200],np.uint8)
+        #im = np.array(Vcoscos * 255, dtype = np.uint8)
+        #cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',im)
 
-        #    hsv_img = cv2.cvtColor(frameC,cv2.COLOR_BGR2HSV)
-
-        #    thres = cv2.inRange(hsv_img, ORANGE_MIN, ORANGE_MAX)
-        #    t1=time.time()
-        #    print('opencv thresholding : '+str(t1-t0))
-
-        #blueMask = frameC[:,:,0]<self.thresholdBlue
-
-        #maskRB = redMask*blueMask
-        #print('numpy thresholding  : '+str(t1-t0))
-        #kernel = np.ones((5,5),np.uint8)
-        #thres = cv2.erode(thres,kernel,iterations = 1)
-        #thres = cv2.dilate(thres,kernel,iterations = 3)
-
-        #if False:
-        #    im2,contours,hierarchy = cv2.findContours(thres ,cv2.RETR_LIST ,cv2.CHAIN_APPROX_SIMPLE)
-            #cv2.drawContours(thres,contours,-1,(0,0,255),2)
-
-
-        #    for contour in contours:
-        #        if len(contour)>20:
-        #            contX = ((contour[:,0,0]-self.xCrop[-1])/float(self.xCrop[-1]))
-        #            contY = ((contour[:,0,1]-self.xCrop[5])/float(self.xCrop[-1]))
-        #            phi = (self.fov*np.arctan2(contX,np.sqrt(1-(np.power(contX,2)+np.power(contY,2)))))-math.pi/2
-        #            theta = np.arctan2(contY,np.sqrt(1-(np.power(contY,2))))
-        #            phiMax = np.max(phi)
-        #            phiMin = np.min(phi)
-        #            self.duV = self.duV + (math.sin(phiMax)-math.sin(phiMin))
-        #            self.dpV = self.dpV - (math.cos(phiMax)-math.cos(phiMin))
-        #            if phiMin>-.95*math.pi:
-        #                self.dudV = self.dudV + (math.cos(phiMin))
-        #                self.dpdV = self.dpdV + (math.sin(phiMin))
-        #            if phiMax<-.05*math.pi:
-        #                self.dudV = self.dudV + (math.cos(phiMax))
-        #                self.dpdV = self.dpdV + (math.sin(phiMax))
-
-
-        #    t1=time.time()
-        #    print('opencv integration : '+str(t1-t0))
-        
-        #t0=time.time()
-
-        #print('numpy integration  : '+str(t1-t0))
-
-        #t0=time.time()
-        #A=self.VcoscosA
-        #
-        #im = np.array(maskRB * 255, dtype = np.uint8)
-        #cv2.imwrite('/home/pi/imTest/mask'+n+'.jpg',im)
-        #im = np.array(blueMask * 255, dtype = np.uint8)
-        #cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
-        #cv2.imwrite('/home/pi/imTest/blue'+n+'.jpg',frameC[:,:,0])
-        #cv2.imwrite('/home/pi/imTest/green'+n+'.jpg',frameC[:,:,1])
-        #cv2.imwrite('/home/pi/imTest/red'+n+'.jpg',frameC[:,:,2])
-        #cv2.imwrite('/home/pi/imTest/redgreen'+n+'.jpg',np.subtract(frameC[:,:,2], frameC[:,:,1].astype(np.int16)).clip(0, 255).astype(np.uint8))
-        #im = np.array(maskRB * 255, dtype = np.uint8)
-        #cv2.imwrite('/home/pi/imTest/thres '+str(self.i)+'.jpg',thres)
-        
-        #cv2.imwrite('/home/pi/imTest/frame'+str(self.i)+'.jpg',frameC)
-        #frameC[maskRB]=0
-        #cv2.imwrite('/home/pi/imTest/image'+str(self.i)+'.jpg',frameC)
-        #print('image'+str(self.i)+'.jpg')
-
-        #print('thres : ' + str(self.threshold))
 
 
 
