@@ -19,11 +19,15 @@ dVu = 0
 dVp = 0
 vision = droneControl.vision()
 
+tStatus = 0
+tStatusEmergency = 15
+
 def droneCommServer(ip):
     print(' - - -- starting the drone center command')
     global running
     global started
     global state
+    global tStatus
     backlog = 1  # how many connections to accept
     maxsize = 28
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -49,6 +53,7 @@ def droneCommServer(ip):
             code = struct.unpack('i',connection.recv(4))[0]
             #print('------ code : '+ str(code))
             if code == swarmNet.requestStatusCode:
+                tStatus = 0
                 print('state : '+str(state))
                 data = struct.pack('ii', swarmNet.sendStatusCode,state)
                 try:
@@ -79,7 +84,7 @@ def droneCommServer(ip):
                     connection.sendall(data)
                 except:
                     print('sending did not work :/ but better not break everything')
-                started = False
+                
                 swarmNet.droneComm(swarmNet.leftBrainIP,code = code,dataSend=dataSend)
                 
         except:
@@ -107,21 +112,10 @@ def brainStatus(IP):
 
 
 
-def droneControl():
-    
-    global started
-    tSleep = .3
-    while running:
-        time.sleep(tSleep)
-        if started:
-            #print('sending the right world')
-            #print('with the following vision : '+str([vision.Vu,vision.Vp,vision.dVu,vision.dVp]))
-            swarmNet.droneComm(swarmNet.leftBrainIP,code=swarmNet.updateVisionCode[0],dataSend=[vision.Vu,vision.Vp,vision.dVu,vision.dVp])
-
-
 def main():
     global running
     global started
+    global tStatus
     t0 = time.time()
     time.sleep(30)
     ti=t0
@@ -133,13 +127,10 @@ def main():
     statusThread = threading.Thread(target = droneCommServer, args=(swarmNet.dronesIP[droneId],))
     statusThread.daemon = True
     statusThread.start()
-    statusThread = threading.Thread(target = swarmNet.giveStatus, args=(swarmNet.rightBrainIP,))
-    statusThread.daemon = True
-    statusThread.start()
+    #statusThread = threading.Thread(target = swarmNet.giveStatus, args=(swarmNet.rightBrainIP,))
+    #statusThread.daemon = True
+    #statusThread.start()
     statusThread = threading.Thread(target = brainStatus, args=(swarmNet.leftBrainIP,))
-    statusThread.daemon = True
-    statusThread.start()
-    statusThread = threading.Thread(target = droneControl, args=())
     statusThread.daemon = True
     statusThread.start()
 
@@ -147,10 +138,21 @@ def main():
         eyeProp = np.loadtxt('/home/pi/droneSpecs.csv')
         vision.sectionCrop(eyeProp)
         vision.start()
-        started = True
+        
     except ValueError:
         print(ValueError)
+
+    tSleep = .3
     while running:
+        time.sleep(tSleep)
+        tStatus = tStatus +.3
+        if started:
+            #print('sending the right world')
+            #print('with the following vision : '+str([vision.Vu,vision.Vp,vision.dVu,vision.dVp]))
+            swarmNet.droneComm(swarmNet.leftBrainIP,code=swarmNet.updateVisionCode[0],dataSend=[vision.Vu,vision.Vp,vision.dVu,vision.dVp])
+        if tStatus>tStatusEmergency:
+            swarmNet.droneComm(swarmNet.leftBrainIP,code = swarmNet.startCode[2])
+
 
         
         time.sleep(60)
