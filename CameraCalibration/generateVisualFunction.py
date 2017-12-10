@@ -45,7 +45,7 @@ def generateSinFunction(xCrop):
     print('first coopol : ' + str((t1-t0)))
     t0 = t1
     t2 = t0
-    tanT = np.tan(theta2)
+    sinT = np.sin(theta2)
     t1=time.time()
     print('time elapsed : ' + str((t1-t0)))
     t0 = t1
@@ -62,7 +62,7 @@ def generateSinFunction(xCrop):
     t1=time.time()
     print('time elapsed : ' + str((t1-t0)))
     t0 = t1
-    phi = np.arctan2(tanT,sinP)
+    phi = np.arctan2(sinT,cosP*sinP)
     t1=time.time()
     print('time elapsed : ' + str((t1-t0)))
     t0 = t1
