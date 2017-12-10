@@ -9,6 +9,9 @@ import sys
 def generateSinFunction(xCrop):
 
 
+    t0=time.time()
+    print('time elapsed : ' + str((t1-t0)))
+    t0 = t1
     x=np.linspace(-1,1,xCrop[-1]*2);
     
     X=np.tile(x,(976,1))
@@ -17,13 +20,18 @@ def generateSinFunction(xCrop):
     Y=Y.T
     Y=Y[-xCrop[2]:-xCrop[2]+976,:]
 
+    t1=time.time()
+    print('creat of x   : ' + str((t1-t0)))
+    t0 = t1
     if np.shape(Y)[0]<976:
         Y2=np.zeros((np.shape(X)[0]-np.shape(Y)[0],np.shape(X)[1]))
         Y=np.concatenate((Y2,Y),axis = 0)
 
 
 
-
+    t1=time.time()
+    print('resizing     : ' + str((t1-t0)))
+    t0 = t1
     fov = math.pi/2.0 * 220/180.0
     R=np.sqrt(np.power(X,2)+np.power(Y,2));
     circle = R<.99
@@ -32,9 +40,14 @@ def generateSinFunction(xCrop):
     phi2 = (np.arctan2(X,Y))
     theta2 = (fov * R) - math.pi/2
 
-
+    t1=time.time()
+    print('first coopol : ' + str((t1-t0)))
+    t0 = t1
     phi = np.arctan2(np.tan(theta2),np.sin(phi2))
     theta = np.arcsin(np.cos(theta2)*np.cos(phi2))
+    t1=time.time()
+    print('secon coopol : ' + str((t1-t0)))
+    t0 = t1
     dPhi = np.abs((np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1)))
 
     dPhi[dPhi>math.pi] = np.abs(dPhi[dPhi>math.pi]-2*math.pi)
@@ -44,9 +57,13 @@ def generateSinFunction(xCrop):
     dTheta = np.abs((np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0)))
     dTheta = circle*(dTheta)
     dPhi = dPhi*circle
-
+    t1=time.time()
+    print('dphi dtheta  : ' + str((t1-t0)))
+    t0 = t1
     circularMask = R2<.98
- 
+    t1=time.time()
+    print('cicle mask   : ' + str((t1-t0)))
+    t0 = t1
     Vcoscos = np.cos(phi)*np.cos(theta)*dTheta
     Vcossin = np.sin(phi)*np.cos(theta)*dTheta
     Vsin = np.sin(theta)*dTheta
@@ -56,7 +73,9 @@ def generateSinFunction(xCrop):
     VcossinR = np.array(Vcossin*dPhi)
     VsinA = Vsin*dPhi*circularMask
     VsinR = Vsin*dPhi*dTheta
-    
+    t1=time.time()
+    print('All calcula  : ' + str((t1-t0)))
+    t0 = t1
     
     #im = np.array(Vcoscos * 255, dtype = np.uint8)
     #cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',im)
