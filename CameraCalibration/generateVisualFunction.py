@@ -10,6 +10,7 @@ def generateSinFunction(xCrop):
 
 
     t0=time.time()
+    t1=time.time()
     print('time elapsed : ' + str((t1-t0)))
     t0 = t1
     x=np.linspace(-1,1,xCrop[-1]*2);
