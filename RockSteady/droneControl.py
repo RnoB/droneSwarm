@@ -11,7 +11,7 @@ import sys
 
 from core.bebop import *
 
-def generateSinFunction():
+def generateSinFunction(xCrop):
 
 
     x=np.linspace(-1,1,xCrop[-1]*2);
