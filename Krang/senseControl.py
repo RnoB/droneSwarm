@@ -141,7 +141,7 @@ class senseController():
 
     def getStatus(self):
         while self.running:
-            time.sleep(5):
+            time.sleep(5)
             self.pushed_down()
 
     def refresh(self):
