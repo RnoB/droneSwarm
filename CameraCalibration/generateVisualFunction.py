@@ -44,10 +44,34 @@ def generateSinFunction(xCrop):
     t1=time.time()
     print('first coopol : ' + str((t1-t0)))
     t0 = t1
-    phi = np.arctan2(np.tan(theta2),np.sin(phi2))
-    theta = np.arcsin(np.cos(theta2)*np.cos(phi2))
+    t2 = t0
+    tanT = np.tan(theta2)
     t1=time.time()
-    print('secon coopol : ' + str((t1-t0)))
+    print('time elapsed : ' + str((t1-t0)))
+    t0 = t1
+
+    sinP = np.sin(phi2)
+    t1=time.time()
+    print('time elapsed : ' + str((t1-t0)))
+    t0 = t1
+    cosT = np.cos(theta2)
+    t1=time.time()
+    print('time elapsed : ' + str((t1-t0)))
+    t0 = t1
+    cosP = np.cos(phi2)
+    t1=time.time()
+    print('time elapsed : ' + str((t1-t0)))
+    t0 = t1
+    phi = np.arctan2(tantT,sinP)
+    t1=time.time()
+    print('time elapsed : ' + str((t1-t0)))
+    t0 = t1
+    theta = np.arcsin(cosT*cosP)
+    t1=time.time()
+    print('time elapsed : ' + str((t1-t0)))
+    t0 = t1
+    t1=time.time()
+    print('secon coopol : ' + str((t1-t2)))
     t0 = t1
     dPhi = np.abs((np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1)))
 
@@ -99,17 +123,17 @@ def main():
     eyeProp = np.loadtxt('/home/pi/droneSpecs.csv')
     xCrop = sectionCrop(eyeProp)
     VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circle,phi,dphi,theta,dtheta=generateSinFunction(xCrop)
-    np.savetxt('/home/pi/phi.csv',phi,delimiter=",")
-    np.savetxt('/home/pi/theta.csv',theta,delimiter=",")
-    np.savetxt('/home/pi/dphi.csv',dphi,delimiter=",")
-    np.savetxt('/home/pi/dtheta.csv',dtheta,delimiter=",")
-    np.savetxt('/home/pi/VcoscosA.csv',VcoscosA,delimiter=",")
-    np.savetxt('/home/pi/VcoscosR.csv',VcoscosR,delimiter=",")
-    np.savetxt('/home/pi/VcossinA.csv',VcossinA,delimiter=",")
-    np.savetxt('/home/pi/VcossinR.csv',VcossinR,delimiter=",")
-    np.savetxt('/home/pi/VsinA.csv',VsinA,delimiter=",")
-    np.savetxt('/home/pi/VsinR.csv',VsinR,delimiter=",")
-    np.savetxt('/home/pi/circle.csv',circle,delimiter=",")
+    #np.savetxt('/home/pi/phi.csv',phi,delimiter=",")
+    #np.savetxt('/home/pi/theta.csv',theta,delimiter=",")
+    #np.savetxt('/home/pi/dphi.csv',dphi,delimiter=",")
+    #np.savetxt('/home/pi/dtheta.csv',dtheta,delimiter=",")
+    #np.savetxt('/home/pi/VcoscosA.csv',VcoscosA,delimiter=",")
+    #np.savetxt('/home/pi/VcoscosR.csv',VcoscosR,delimiter=",")
+    #np.savetxt('/home/pi/VcossinA.csv',VcossinA,delimiter=",")
+    #np.savetxt('/home/pi/VcossinR.csv',VcossinR,delimiter=",")
+    #np.savetxt('/home/pi/VsinA.csv',VsinA,delimiter=",")
+    #np.savetxt('/home/pi/VsinR.csv',VsinR,delimiter=",")
+    #np.savetxt('/home/pi/circle.csv',circle,delimiter=",")
 
 
 
