@@ -32,7 +32,7 @@ def generateSinFunction(xCrop):
     fov = math.pi/2.0 * 220/180.0
     R=np.sqrt(np.power(X,2)+np.power(Y,2));
     circle = R<.99
-    R2=R
+    R2=np.copy(R)
     R[R>1]=0
     phi2 = (np.arctan2(X,Y))
     theta2 = (fov * R) - math.pi/2
