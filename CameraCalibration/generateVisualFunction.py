@@ -62,7 +62,7 @@ def generateSinFunction(xCrop):
     t1=time.time()
     print('time elapsed : ' + str((t1-t0)))
     t0 = t1
-    phi = np.arctan2(tantT,sinP)
+    phi = np.arctan2(tanT,sinP)
     t1=time.time()
     print('time elapsed : ' + str((t1-t0)))
     t0 = t1
