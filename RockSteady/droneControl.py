@@ -14,13 +14,54 @@ from core.bebop import *
 def generateSinFunction():
 
 
-    VcoscosA = np.genfromtxt('/home/pi/VcoscosA.csv',delimiter=',',dtype=np.float)
-    VcoscosR = np.genfromtxt('/home/pi/VcoscosR.csv',delimiter=',',dtype=np.float)
-    VcossinA = np.genfromtxt('/home/pi/VcossinA.csv',delimiter=',',dtype=np.float)
-    VcossinR = np.genfromtxt('/home/pi/VcossinR.csv',delimiter=',',dtype=np.float)
-    VsinA = np.genfromtxt('/home/pi/VsinA.csv',delimiter=',',dtype=np.float)
-    VsinR = np.genfromtxt('/home/pi/VsinR.csv',delimiter=',',dtype=np.float)
-    circularMask = np.genfromtxt('/home/pi/circle.csv',delimiter=',',dtype=np.float)
+    x=np.linspace(-1,1,xCrop[-1]*2);
+    
+    X=np.tile(x,(976,1))
+
+    Y=np.tile(x,(xCrop[-1]*2,1))
+    Y=Y.T
+    Y=Y[-xCrop[2]:-xCrop[2]+976,:]
+
+    if np.shape(Y)[0]<976:
+        Y2=np.zeros((np.shape(X)[0]-np.shape(Y)[0],np.shape(X)[1]))
+        Y=np.concatenate((Y2,Y),axis = 0)
+
+
+
+
+    fov = math.pi/2.0 * 220/180.0
+    R=np.sqrt(np.power(X,2)+np.power(Y,2));
+    circle = R<.99
+    R2=R
+    R[R>1]=0
+    phi2 = (np.arctan2(X,Y))
+    theta2 = (fov * R) - math.pi/2
+
+
+    phi = np.arctan2(np.tan(theta2),np.sin(phi2))
+    theta = np.arcsin(np.cos(theta2)*np.cos(phi2))
+    dPhi = np.abs((np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1)))
+
+    dPhi[dPhi>math.pi] = np.abs(dPhi[dPhi>math.pi]-2*math.pi)
+
+    
+    #dPhi = dPhi*circle
+    dTheta = np.abs((np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0)))
+    dTheta = circle*(dTheta)
+    dPhi = dPhi*circle
+
+    circularMask = R2<.98
+ 
+    Vcoscos = np.cos(phi)*np.cos(theta)*dTheta
+    Vcossin = np.sin(phi)*np.cos(theta)*dTheta
+    Vsin = np.sin(theta)*dTheta
+    VcoscosA = np.array(Vcoscos*circularMask)
+    VcoscosR = np.array(Vcoscos*dPhi)
+    VcossinA = np.array(Vcossin*circularMask)
+    VcossinR = np.array(Vcossin*dPhi)
+    VsinA = Vsin*dPhi*circularMask
+    VsinR = Vsin*dPhi*dTheta
+    
     
     
     
@@ -60,7 +101,7 @@ class visionAnalyzer(PiRGBAnalysis):
         self.xCrop = sectionCrop
 
         print('generateSinFunction')
-        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction()
+        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction(self.xCrop)
         print('generatedSinFunction')
 
 
