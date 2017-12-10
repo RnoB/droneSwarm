@@ -11,17 +11,17 @@ import sys
 
 from core.bebop import *
 
-def generateSinFunction(xCrop):
+def generateSinFunction():
 
 
-
-    VcoscosA = np.loadtxt('/home/pi/VcoscosA.csv')
-    VcoscosR = np.loadtxt('/home/pi/VcoscosR.csv')
-    VcossinA = np.loadtxt('/home/pi/VcossinA.csv')
-    VcossinR = np.loadtxt('/home/pi/VcossinR.csv')
-    VsinA = np.loadtxt('/home/pi/VsinA.csv')
-    VsinR = np.loadtxt('/home/pi/VsinR.csv')
-    circularMask = np.loadtxt('/home/pi/circle.csv')
+    VcoscosA = np.genfromtxt('/home/pi/VcoscosA.csv',delimiter=',',dtype=np.float)
+    VcoscosR = np.genfromtxt('/home/pi/VcoscosR.csv',delimiter=',',dtype=np.float)
+    VcossinA = np.genfromtxt('/home/pi/VcossinA.csv',delimiter=',',dtype=np.float)
+    VcossinR = np.genfromtxt('/home/pi/VcossinR.csv',delimiter=',',dtype=np.float)
+    VsinA = np.genfromtxt('/home/pi/VsinA.csv',delimiter=',',dtype=np.float)
+    VsinR = np.genfromtxt('/home/pi/VsinR.csv',delimiter=',',dtype=np.float)
+    circularMask = np.genfromtxt('/home/pi/circle.csv',delimiter=',',dtype=np.float)
+    
     
     
     #im = np.array(Vcoscos * 255, dtype = np.uint8)
@@ -60,7 +60,7 @@ class visionAnalyzer(PiRGBAnalysis):
         self.xCrop = sectionCrop
 
         print('generateSinFunction')
-        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction(self.xCrop)
+        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction()
         print('generatedSinFunction')
 
 
