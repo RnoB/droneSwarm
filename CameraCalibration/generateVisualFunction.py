@@ -71,6 +71,7 @@ def sectionCrop(crop):
     xMin = xCenter-RMax
     yMin = yCenter-RMax
     xCrop = [xMin,xMax,yMin,yMax,xCenter,yCenter,RMax]
+    print('xCrop : '+str(xCrop))
     return xCrop
 
 
