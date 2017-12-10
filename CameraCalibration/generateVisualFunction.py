@@ -27,6 +27,7 @@ def generateSinFunction(xCrop):
     fov = math.pi * 220/180
     R=np.sqrt(np.power(X,2)+np.power(Y,2));
     circle = R<.99
+    R2=R
     R[R>1]=0
     phi2 = (np.arctan2(X,Y))
     theta2 = (fov * R) - math.pi/2
@@ -44,7 +45,7 @@ def generateSinFunction(xCrop):
     dTheta = circle*(dTheta)
     dPhi = dPhi*circle
 
-    circularMask = R<.98
+    circularMask = R2<.98
  
     Vcoscos = np.cos(phi)*np.cos(theta)*dTheta
     Vcossin = np.sin(phi)*np.cos(theta)*dTheta
@@ -59,7 +60,7 @@ def generateSinFunction(xCrop):
     
     #im = np.array(Vcoscos * 255, dtype = np.uint8)
     #cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',im)
-    return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask
+    return VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circularMask,phi,dPhi,theta,dTheta
 
 def sectionCrop(crop):
     xCenter = int(crop[1])
@@ -76,7 +77,11 @@ def sectionCrop(crop):
 def main():
     eyeProp = np.loadtxt('/home/pi/droneSpecs.csv')
     xCrop = sectionCrop(eyeProp)
-    VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circle=generateSinFunction(xCrop)
+    VcoscosA,VcoscosR,VcossinA,VcossinR,VsinA,VsinR,circle,phi,dphi,theta,dtheta=generateSinFunction(xCrop)
+    np.savetxt('/home/pi/phi.csv',phi,delimiter=",")
+    np.savetxt('/home/pi/theta.csv',theta,delimiter=",")
+    np.savetxt('/home/pi/dphi.csv',dphi,delimiter=",")
+    np.savetxt('/home/pi/dtheta.csv',dtheta,delimiter=",")
     np.savetxt('/home/pi/VcoscosA.csv',VcoscosA,delimiter=",")
     np.savetxt('/home/pi/VcoscosR.csv',VcoscosR,delimiter=",")
     np.savetxt('/home/pi/VcossinA.csv',VcossinA,delimiter=",")
