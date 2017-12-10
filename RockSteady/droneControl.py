@@ -38,7 +38,7 @@ def generateSinFunction(xCrop):
     theta2 = (fov * R) - math.pi/2
 
 
-    phi = np.arctan2(np.tan(theta2),np.sin(phi2))
+    phi = np.arctan2(np.sin(theta2),np.sin(phi2)*np.cos(theta2))
     theta = np.arcsin(np.cos(theta2)*np.cos(phi2))
     dPhi = np.abs((np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1)))
 
