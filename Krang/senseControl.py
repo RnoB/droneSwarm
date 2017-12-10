@@ -7,7 +7,7 @@ import os
 import math
 from colorsys import hsv_to_rgb as hsv2rgb
 from sense_hat import SenseHat
-import Thread
+import threading
 
 
 black = (0,0,0)
