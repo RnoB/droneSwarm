@@ -24,7 +24,7 @@ def generateSinFunction(xCrop):
 
 
 
-    fov = math.pi * 220/180
+    fov = math.pi * 220/180.0
     R=np.sqrt(np.power(X,2)+np.power(Y,2));
     circle = R<.99
     R2=R
