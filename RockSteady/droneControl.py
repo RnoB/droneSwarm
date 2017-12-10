@@ -14,53 +14,14 @@ from core.bebop import *
 def generateSinFunction(xCrop):
 
 
-    x=np.linspace(-1,1,xCrop[-1]*2);
-    
-    X=np.tile(x,(976,1))
 
-    Y=np.tile(x,(xCrop[-1]*2,1))
-    Y=Y.T
-    Y=Y[-xCrop[2]:-xCrop[2]+976,:]
-
-    if np.shape(Y)[0]<976:
-        Y2=np.zeros((np.shape(X)[0]-np.shape(Y)[0],np.shape(X)[1]))
-        Y=np.concatenate((Y2,Y),axis = 0)
-
-
-    
-    
-
-    fov = math.pi * 220/180
-    R=np.sqrt(np.power(X,2)+np.power(Y,2));
-    circle = R<.99
-    R[R>1]=0
-    phi2 = (np.arctan2(X,Y))
-    theta2 = (fov * R) - math.pi/2
-
-
-    phi = np.arctan2(np.tan(theta2),np.sin(phi2))
-    theta = np.arcsin(np.cos(theta2)*np.cos(phi2))
-    dPhi = np.abs((np.roll(phi,1,axis=1)-np.roll(phi,-1,axis=1)))
-
-    dPhi[dPhi>math.pi] = np.abs(dPhi[dPhi>math.pi]-2*math.pi)
-
-    
-    #dPhi = dPhi*circle
-    dTheta = np.abs((np.roll(theta,-1,axis=0)-np.roll(theta,1,axis=0)))
-    dTheta = circle*(dTheta)
-    dPhi = dPhi*circle
-
-    circularMask = R<.98
- 
-    Vcoscos = np.cos(phi)*np.cos(theta)*dTheta
-    Vcossin = np.sin(phi)*np.cos(theta)*dTheta
-    Vsin = np.sin(theta)*dTheta
-    VcoscosA = np.array(Vcoscos*circularMask)
-    VcoscosR = np.array(Vcoscos*dPhi)
-    VcossinA = np.array(Vcossin*circularMask)
-    VcossinR = np.array(Vcossin*dPhi)
-    VsinA = Vsin*dPhi*circularMask
-    VsinR = Vsin*dPhi*dTheta
+    VcoscosA = np.loadtxt('/home/pi/VcoscosA.csv')
+    VcoscosR = np.loadtxt('/home/pi/VcoscosR.csv')
+    VcossinA = np.loadtxt('/home/pi/VcossinA.csv')
+    VcossinR = np.loadtxt('/home/pi/VcossinR.csv')
+    VsinA = np.loadtxt('/home/pi/VsinA.csv')
+    VsinR = np.loadtxt('/home/pi/VsinR.csv')
+    circularMask = np.loadtxt('/home/pi/circle.csv')
     
     
     #im = np.array(Vcoscos * 255, dtype = np.uint8)

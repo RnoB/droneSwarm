@@ -78,7 +78,7 @@ class visionAnalyzer(PiRGBAnalysis):
             
             
             rad = np.asarray([self.radius,self.center[0],self.center[1]])
-            np.savetxt('droneSpecs.csv',rad,delimiter=",")
+            np.savetxt('/home/pi/droneSpecs.csv',rad,delimiter=",")
             
             
             os.system('killall python3')

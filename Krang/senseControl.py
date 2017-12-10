@@ -7,7 +7,7 @@ import os
 import math
 from colorsys import hsv_to_rgb as hsv2rgb
 from sense_hat import SenseHat
-
+import Thread
 
 
 black = (0,0,0)
@@ -139,7 +139,10 @@ class senseController():
         if self.killState:
             os.system('sudo telinit 0')
 
-
+    def getStatus(self):
+        while self.running:
+            time.sleep(5):
+            self.pushed_down()
 
     def refresh(self):
         self.sense.clear()
@@ -158,7 +161,9 @@ class senseController():
         #self.sense.stick.direction_left = self.pushed_down
         #self.sense.stick.direction_down = self.pushed_right
         #self.sense.stick.direction_middle = self.pushed_middle
-        
+        statusThread = threading.Thread(target = self.getStatus)
+        statusThread.daemon = True
+        statusThread.start()
 
         t0 = time.time()
         ti=t0
