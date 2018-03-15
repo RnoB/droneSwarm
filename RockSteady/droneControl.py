@@ -270,10 +270,14 @@ class droneController:
 
     def move(self):
         roll = 0
-        pitch = self.um*(self.ru*self.Vu+self.au*self.dVu)
-        yaw = self.pm*(self.rp*self.Vp+self.ap*self.dVp)
+        pitch = int(self.um*(self.ru*self.Vu+self.au*self.dVu))
+        yaw = int(self.pm*(self.rp*self.Vp+self.ap*self.dVp))
         gaz = 0
 
+        if np.abs(roll)>127:
+            roll = 127*roll/abs(roll)
+        if np.abs(yaw)>127:
+            yaw = 127*yaw/abs(yaw)
         print('pitch : '+str(pitch))
         print('yaw  : '+str(yaw))
         if self.droneConnected:
