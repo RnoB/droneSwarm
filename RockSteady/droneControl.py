@@ -270,8 +270,8 @@ class droneController:
 
     def move(self):
         roll = 0
-        pitch = 0#self.um*(self.ru*self.Vu+self.au*self.dVu)
-        yaw = -100#self.pm*(self.rp*self.Vp+self.ap*self.dVp)
+        pitch = self.um*(self.ru*self.Vu+self.au*self.dVu)
+        yaw = self.pm*(self.rp*self.Vp+self.ap*self.dVp)
         gaz = 0
 
         print('pitch : '+str(pitch))
