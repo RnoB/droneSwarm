@@ -129,7 +129,7 @@ class visionAnalyzer(PiRGBAnalysis):
         self.t0 = t1
 
         #im = np.array(Vcoscos * 255, dtype = np.uint8)
-        #cv2.imwrite('/home/pi/imTest/Vcoscos.jpg',im)
+        cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
 
 
 
