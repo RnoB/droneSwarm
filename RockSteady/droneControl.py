@@ -20,7 +20,7 @@ def generateSinFunction(xCrop):
 
     Y=np.tile(x,(xCrop[-1]*2,1))
     Y=Y.T
-    Y=Y[-xCrop[2]:-xCrop[2]+976,:]
+    Y=Y[-xCrop[4]:-xCrop[4]+976,:]
 
     if np.shape(Y)[0]<976:
         Y2=np.zeros((np.shape(X)[0]-np.shape(Y)[0],np.shape(X)[1]))
@@ -101,7 +101,7 @@ class visionAnalyzer(PiRGBAnalysis):
         self.xCrop = sectionCrop
 
         print('generateSinFunction')
-        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction(self.xCrop)
+        self.VcoscosA,self.VcoscosR,self.VcossinA,self.VcossinR,self.VsinA,self.VsinR,self.circle=generateSinFunction(sectionCrop)
         print('generatedSinFunction')
 
 
@@ -129,7 +129,7 @@ class visionAnalyzer(PiRGBAnalysis):
         self.t0 = t1
 
         #im = np.array(Vcoscos * 255, dtype = np.uint8)
-        cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
+        #cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
 
 
 
