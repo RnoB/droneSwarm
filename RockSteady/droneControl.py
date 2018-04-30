@@ -112,7 +112,7 @@ class visionAnalyzer(PiRGBAnalysis):
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
         t0=time.time()
         
-        maskRB = np.subtract(frameC[:,:,2], frameC[:,:,1].astype(np.int16))
+        maskRB = np.subtract(frameC[:,:,2], frameC[:,:,0].astype(np.int16))
         maskRB=maskRB>self.thresholdRed
         maskdRB = (np.roll(maskRB,1,axis=1) != np.roll(maskRB,-1,axis=1))
         n = str(self.i).zfill(5)
@@ -163,7 +163,7 @@ class vision:
             camera.iso = 800
             camera.shutter_speed = 50000
             camera.awb_mode = 'off'
-            camera.awb_gains=(2.5,6)
+            camera.awb_gains=(8,1)
             #camera.exposure_speed = 100
             #camera.exposure_mode = 'night'
             camera.exposure_compensation = 20
