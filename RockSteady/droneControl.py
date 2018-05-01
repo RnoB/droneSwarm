@@ -13,14 +13,14 @@ from core.bebop import *
 
 def generateSinFunction(xCrop):
 
-    scaleF = 100000
+
     x=np.linspace(-1,1,xCrop[-1]*2);
     
     X=np.tile(x,(976,1))
 
     Y=np.tile(x,(xCrop[-1]*2,1))
     Y=Y.T
-    Y=Y[-xCrop[4]:-xCrop[4]+976,:]
+    Y=Y[-xCrop[2]:-xCrop[2]+976,:]
 
     if np.shape(Y)[0]<976:
         Y2=np.zeros((np.shape(X)[0]-np.shape(Y)[0],np.shape(X)[1]))
@@ -55,12 +55,12 @@ def generateSinFunction(xCrop):
     Vcoscos = np.cos(phi)*np.cos(theta)*dTheta
     Vcossin = np.sin(phi)*np.cos(theta)*dTheta
     Vsin = np.sin(theta)*dTheta
-    VcoscosA = np.array(Vcoscos*circularMask*scaleF)
-    VcoscosR = np.array(Vcoscos*dPhi*scaleF)
-    VcossinA = np.array(Vcossin*circularMask*scaleF)
-    VcossinR = np.array(Vcossin*dPhi*scaleF)
-    VsinA = Vsin*dPhi*circularMask*scaleF
-    VsinR = Vsin*dPhi*dTheta*scaleF
+    VcoscosA = np.array(Vcoscos*circularMask)
+    VcoscosR = np.array(Vcoscos*dPhi)
+    VcossinA = np.array(Vcossin*circularMask)
+    VcossinR = np.array(Vcossin*dPhi)
+    VsinA = Vsin*dPhi*circularMask
+    VsinR = Vsin*dPhi*dTheta
     
     
     
