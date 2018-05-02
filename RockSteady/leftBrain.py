@@ -53,15 +53,15 @@ def droneCommServer(ip):
             time.sleep(20)
     server.listen(1)
     while running:
-        #print('--- waiting for a connection')
+        print('--- waiting for a connection')
         try:
             connection, client_address = server.accept()
-            #print('------ Connection coming from ' + str(client_address))
+            print('------ Connection coming from ' + str(client_address))
 
 
 
             code = struct.unpack('i',connection.recv(4))[0]
-            #print('------ code : '+ str(code))
+            print('------ code : '+ str(code))
             if code == swarmNet.requestStatusCode:
                 tStatus = 0
                 data = struct.pack('ii', swarmNet.sendStatusCode,state)
