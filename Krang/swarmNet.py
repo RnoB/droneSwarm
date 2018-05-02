@@ -176,8 +176,7 @@ def droneComm(ip,dronePort = droneCommLeftPort,code = requestStatusCode,dataSend
             socketClient.shutdown(socket.SHUT_RDWR)
             socketClient.close()
 
-    except ValueError:
-        print(ValueError)
-        pass
-        print('--- connection failed')  
+    except:
+        print('--- connection failed')
+        pass  
     return status
