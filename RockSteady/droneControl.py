@@ -127,7 +127,7 @@ class visionAnalyzer(PiRGBAnalysis):
         t1=time.time()
         print('fps : ' + str(int(1/(t1-self.t0))))
         self.t0 = t1
-
+        time.sleep(.01)
         #im = np.array(Vcoscos * 255, dtype = np.uint8)
         #cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
 

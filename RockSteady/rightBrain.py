@@ -144,7 +144,7 @@ def main():
     except ValueError:
         print(ValueError)
 
-    tSleep = .1
+    tSleep = .01
     while running:
         time.sleep(tSleep)
         tStatus = tStatus +.3
