@@ -139,6 +139,7 @@ def main():
         eyeProp = np.loadtxt('/home/pi/droneSpecs.csv')
         vision.sectionCrop(eyeProp)
         vision.start()
+        started = True
         
     except ValueError:
         print(ValueError)
