@@ -62,6 +62,8 @@ def droneCommServer(ip):
 
             code = struct.unpack('i',connection.recv(4))[0]
             print('------ code : '+ str(code))
+            print('-- matching : '+str(swarmNet.updateVisionCode[0]))
+            print(code == swarmNet.updateVisionCode[0])
             if code == swarmNet.requestStatusCode:
                 tStatus = 0
                 data = struct.pack('ii', swarmNet.sendStatusCode,state)
