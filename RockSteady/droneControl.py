@@ -129,7 +129,8 @@ class visionAnalyzer(PiRGBAnalysis):
         self.t0 = t1
         time.sleep(.01)
         #im = np.array(Vcoscos * 255, dtype = np.uint8)
-        #cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
+        cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
+        cv2.imwrite('/home/pi/imTest/maske'+n+'.jpg',maskRB)
 
 
 
