@@ -289,7 +289,7 @@ class droneController:
         self.Vp = Vp
         self.dVu = dVu
         self.dVp = dVp
-        #print('Vision : '+str((self.Vu,self.Vp,self.dVu,self.dVp)))
+        print('Vision : '+str((self.Vu,self.Vp,self.dVu,self.dVp)))
 
 
     def start(self):
