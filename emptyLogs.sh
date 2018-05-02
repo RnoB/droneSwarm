@@ -1,0 +1,11 @@
+#!/bin/sh
+sshpass -p raspberry ssh pi@192.168.0.151 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.161 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.152 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.162 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.153 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.163 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.154 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.164 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.155 "cd logs;sudo rm *.log"
+sshpass -p raspberry ssh pi@192.168.0.165 "cd logs;sudo rm *.log"
