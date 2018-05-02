@@ -1,0 +1,11 @@
+#!/bin/sh
+sshpass -p raspberry ssh pi@192.168.0.151 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.161 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.152 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.162 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.153 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.163 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.154 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.164 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.155 "sudo telinit 0"
+sshpass -p raspberry ssh pi@192.168.0.165 "sudo telinit 0"
