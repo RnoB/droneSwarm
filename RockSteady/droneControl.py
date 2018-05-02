@@ -110,7 +110,7 @@ class visionAnalyzer(PiRGBAnalysis):
     def analyze(self,frame):
 
         frameC = frame[:,self.xCrop[0]:self.xCrop[1],:]
-        t0=time.time()
+        #t0=time.time()
         
         maskRB = np.subtract(frameC[:,:,2], frameC[:,:,1].astype(np.int16))
         maskRB=maskRB>self.thresholdRed
