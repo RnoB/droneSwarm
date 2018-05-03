@@ -75,7 +75,7 @@ class visionAnalyzer(PiRGBAnalysis):
     dudV = 0
     dpV = 0
     dpdV = 0
-    
+    newVision = False
     i=0
     thresholdRed = 50
     thresholdBlue = 200
@@ -128,7 +128,6 @@ class visionAnalyzer(PiRGBAnalysis):
         print('fps : ' + str(int(1/(t1-self.t0))))
         self.t0 = t1
         self.newVision = True
-        print('analy : '+str(self.newVision))
         time.sleep(.01)
         #im = np.array(Vcoscos * 255, dtype = np.uint8)
         #cv2.imwrite('/home/pi/imTest/frame'+n+'.jpg',frameC)
@@ -196,6 +195,7 @@ class vision:
                             firstRound = False
  
                         else:
+                            self.newVision = anal.newVision
                             self.Vu =anal.duV
                             self.Vp =anal.dpV
                             self.dVu=anal.dudV
