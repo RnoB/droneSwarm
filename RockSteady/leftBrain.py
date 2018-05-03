@@ -90,7 +90,7 @@ def droneCommServer(ip):
                     droneController.emergencylanding()
             if code == swarmNet.updateVisionCode[0]:
                 data= struct.unpack('dddd',connection.recv(32))
-                print('the right world looks like : '+str(data))
+                print(swarmNet.bcolors.GREEN+'the right world looks like : '+str(data)+swarmNet.bcolors.ENDC)
                 VuR = data[0]
                 VpR = data[1]
                 dVuR = data[2]
