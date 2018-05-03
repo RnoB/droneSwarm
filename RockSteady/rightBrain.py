@@ -153,7 +153,7 @@ def main():
         tStatus = time.time()-tStatus0
         if started and vision.newVision:
             vision.newVision = False
-            print('sending the right world')
+            print(swarmNet.bcolors.GREEN+'sending the right world'+swarmNet.bcolors.ENDC)
             print('with the following vision : '+str([vision.Vu,vision.Vp,vision.dVu,vision.dVp]))
             swarmNet.droneComm(swarmNet.leftBrainIP,code=swarmNet.updateVisionCode[0],dataSend=[vision.Vu,vision.Vp,vision.dVu,vision.dVp])
 

@@ -11,6 +11,12 @@ import sys
 
 from core.bebop import *
 
+
+
+
+
+
+
 def generateSinFunction(xCrop):
 
 
@@ -120,12 +126,12 @@ class visionAnalyzer(PiRGBAnalysis):
         self.dudV = np.sum(self.VcoscosA[maskdRB])/2.0
         self.dpV = np.sum(self.VcossinR[maskRB])
         self.dpdV = np.sum(self.VcossinA[maskdRB])/2.0
-        print('frame : '+n)
-        print('vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV)))
+        print(swarmNet.bcolors.RED +'frame : '+n+swarmNet.bcolors.ENDC)
+        print(swarmNet.bcolors.RED +'vision from frame : '+str((self.duV,self.dpV,self.dudV,self.dpdV))+swarmNet.bcolors.ENDC)
 
         self.i=self.i+1
         t1=time.time()
-        print('fps : ' + str(int(1/(t1-self.t0))))
+        print(swarmNet.bcolors.RED +'fps : ' + str(int(1/(t1-self.t0)))+swarmNet.bcolors.ENDC)
         self.t0 = t1
         self.newVision = True
         time.sleep(.01)
@@ -281,8 +287,8 @@ class droneController:
             roll = 127*roll/abs(roll)
         if np.abs(yaw)>127:
             yaw = 127*yaw/abs(yaw)
-        print('pitch : '+str(pitch))
-        print('yaw  : '+str(yaw))
+        print(swarmNet.bcolors.CYAN +'pitch : '+str(pitch)+swarmNet.bcolors.ENDC)
+        print(swarmNet.bcolors.CYAN +'yaw  : '+str(yaw)+swarmNet.bcolors.ENDC)
         if self.droneConnected:
             self.drone.update(cmd=movePCMDCmd(active=True, roll=roll, pitch=pitch, yaw=yaw, gaz=gaz))
 
@@ -292,7 +298,7 @@ class droneController:
         self.Vp = Vp
         self.dVu = dVu
         self.dVp = dVp
-        print('Vision : '+str((self.Vu,self.Vp,self.dVu,self.dVp)))
+        print(swarmNet.bcolors.MAGENTA +'Vision : '+str((self.Vu,self.Vp,self.dVu,self.dVp))+swarmNet.bcolors.MAGENTA)
 
 
     def start(self):

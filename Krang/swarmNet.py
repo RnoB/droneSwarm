@@ -40,6 +40,25 @@ running = True
 max_int64 = 0xFFFFFFFFFFFFFFFF
 
 
+
+class bcolors:
+    RED= '\033[31m'
+    GREEN = '\033[32m'
+    BROWN = '\033[33m'
+    BLUE = '\033[34m'
+    MAGENTA = '\033[35m'
+    CYAN = '\033[36m'
+    ENDC = '\033[0m'
+
+    def disable(self):
+        self.RED = ''
+        self.GREEN = ''
+        self.BROWN = ''
+        self.BLUE = ''
+        self.MAGENTA = ''
+        self.CYAN = ''
+        self.ENDC = ''
+
 def broadcastSize(fishVR,size):
     global running
     socketSend = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
