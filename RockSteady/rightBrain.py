@@ -20,6 +20,7 @@ dVp = 0
 vision = droneControl.vision()
 
 tStatus = 0
+tStatus0 = time.time()
 tStatusEmergency = 15
 
 def droneCommServer(ip):
@@ -96,6 +97,7 @@ def droneCommServer(ip):
 
 def brainStatus(IP):
     global state
+    global tStatus0
     tSleep = 5
     while running:
         print('--- Check Brain Connectivity')
@@ -107,6 +109,7 @@ def brainStatus(IP):
                 state = 2
             else:
                 state = 1
+            tStatus0=time.time()
         except:
             print('lobotomy !!! ')
             state = 1
@@ -147,7 +150,7 @@ def main():
     tSleep = .01
     while running:
         time.sleep(tSleep)
-        tStatus = tStatus +.3
+        tStatus = time.time()-tStatus0
         if started:
             print('sending the right world')
             print('with the following vision : '+str([vision.Vu,vision.Vp,vision.dVu,vision.dVp]))
