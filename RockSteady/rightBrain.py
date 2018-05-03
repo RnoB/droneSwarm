@@ -151,6 +151,7 @@ def main():
     while running:
         time.sleep(tSleep)
         tStatus = time.time()-tStatus0
+        print('vision'+str(vision.newVision))
         if started and vision.newVision:
             vision.newVision = False
             print('sending the right world')
