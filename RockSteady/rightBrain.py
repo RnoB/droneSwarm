@@ -147,14 +147,16 @@ def main():
     except ValueError:
         print(ValueError)
 
-    tSleep = .4
+    tSleep = .1
     while running:
         time.sleep(tSleep)
         tStatus = time.time()-tStatus0
-        if started:
+        if started and vision.newVision:
+            vision.newVision = False
             print('sending the right world')
             print('with the following vision : '+str([vision.Vu,vision.Vp,vision.dVu,vision.dVp]))
             swarmNet.droneComm(swarmNet.leftBrainIP,code=swarmNet.updateVisionCode[0],dataSend=[vision.Vu,vision.Vp,vision.dVu,vision.dVp])
+
         if tStatus>tStatusEmergency:
             swarmNet.droneComm(swarmNet.leftBrainIP,code = swarmNet.startCode[2])
 
