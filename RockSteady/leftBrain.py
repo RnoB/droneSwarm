@@ -130,7 +130,7 @@ def droneControl():
         if started:
             
             
-            droneController.updateVision(vision.Vu-VuR,vision.Vp-VpR,vision.dVu-dVuR,vision.dVp-dVp)
+            droneController.updateVision(vision.Vu-VuR,vision.Vp-VpR,vision.dVu-dVuR,vision.dVp-dVpR)
             droneController.move()
 
 

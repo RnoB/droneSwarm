@@ -283,8 +283,8 @@ class droneController:
         yaw = int(self.pm*(self.rp*self.Vp+self.ap*self.dVp))
         gaz = 0
 
-        if np.abs(roll)>127:
-            roll = 127*roll/abs(roll)
+        if np.abs(pitch)>127:
+            pitch = 127*pitch/abs(pitch)
         if np.abs(yaw)>127:
             yaw = 127*yaw/abs(yaw)
         print(swarmNet.bcolors.CYAN +'pitch : '+str(pitch)+swarmNet.bcolors.ENDC)
