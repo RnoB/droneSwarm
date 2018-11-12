@@ -13,6 +13,8 @@ import os
 
 
 
+cv2.namedWindow("window_name", cv2.WND_PROP_FULLSCREEN)
+cv2.setWindowProperty("window_name", cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
 
 class visionAnalyzer(PiRGBAnalysis):
     duV = 0
@@ -72,8 +74,9 @@ class visionAnalyzer(PiRGBAnalysis):
                 self.radius = radius
         self.circleStep = self.circleStep+1
         #cv2.imshow('frame',self.thres2)
-        #cv2.imshow('frame',frame)
-        #cv2.waitKey(1)
+        cv2.imshow('window_name',cv2.resize(frame,(320,240)))
+        cv2.waitKey(1)
+        print(self.radiusStep)
         if self.radiusStep == 20:
             
             
